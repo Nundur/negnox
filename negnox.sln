@@ -1,0 +1,71 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32421.90
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "negnox", "negnox\negnox.csproj", "{A07ED842-8C3A-4216-9328-569C4D641753}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nclient", "nclient\nclient.csproj", "{757EC7AE-AD20-49D0-9F5A-C7B970871B58}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MCL", "MCL\MCL.csproj", "{3BBD0AB7-0271-414D-A2F0-E76B32E91FC8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MouseC", "MouseC\MouseC.csproj", "{EFDDFD3F-40C8-4C91-B886-C9EDCE628FAD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "versionCounter", "versionCounter\versionCounter.csproj", "{DE661303-B991-495E-BFDE-31CA3E1D94F9}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "rShello", "rShello", "{D8AFEC53-6F4D-48F8-8E7F-DC8A6F145A4E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "rShello", "rShello\rShello.csproj", "{E83BC319-0C7C-4D73-98D0-0D9F164C102B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "rSL", "rSL\rSL.csproj", "{19227F7C-FA46-46F3-BE41-3B3D94348F08}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MouseControl", "MouseControl", "{ECDF9D82-1718-4FC1-8494-E8CB8B7DDBCE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A07ED842-8C3A-4216-9328-569C4D641753}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A07ED842-8C3A-4216-9328-569C4D641753}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A07ED842-8C3A-4216-9328-569C4D641753}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A07ED842-8C3A-4216-9328-569C4D641753}.Release|Any CPU.Build.0 = Release|Any CPU
+		{757EC7AE-AD20-49D0-9F5A-C7B970871B58}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{757EC7AE-AD20-49D0-9F5A-C7B970871B58}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{757EC7AE-AD20-49D0-9F5A-C7B970871B58}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{757EC7AE-AD20-49D0-9F5A-C7B970871B58}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3BBD0AB7-0271-414D-A2F0-E76B32E91FC8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3BBD0AB7-0271-414D-A2F0-E76B32E91FC8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3BBD0AB7-0271-414D-A2F0-E76B32E91FC8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3BBD0AB7-0271-414D-A2F0-E76B32E91FC8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EFDDFD3F-40C8-4C91-B886-C9EDCE628FAD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EFDDFD3F-40C8-4C91-B886-C9EDCE628FAD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EFDDFD3F-40C8-4C91-B886-C9EDCE628FAD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EFDDFD3F-40C8-4C91-B886-C9EDCE628FAD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DE661303-B991-495E-BFDE-31CA3E1D94F9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DE661303-B991-495E-BFDE-31CA3E1D94F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DE661303-B991-495E-BFDE-31CA3E1D94F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DE661303-B991-495E-BFDE-31CA3E1D94F9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E83BC319-0C7C-4D73-98D0-0D9F164C102B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E83BC319-0C7C-4D73-98D0-0D9F164C102B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E83BC319-0C7C-4D73-98D0-0D9F164C102B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E83BC319-0C7C-4D73-98D0-0D9F164C102B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{19227F7C-FA46-46F3-BE41-3B3D94348F08}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{19227F7C-FA46-46F3-BE41-3B3D94348F08}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{19227F7C-FA46-46F3-BE41-3B3D94348F08}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{19227F7C-FA46-46F3-BE41-3B3D94348F08}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{3BBD0AB7-0271-414D-A2F0-E76B32E91FC8} = {ECDF9D82-1718-4FC1-8494-E8CB8B7DDBCE}
+		{EFDDFD3F-40C8-4C91-B886-C9EDCE628FAD} = {ECDF9D82-1718-4FC1-8494-E8CB8B7DDBCE}
+		{E83BC319-0C7C-4D73-98D0-0D9F164C102B} = {D8AFEC53-6F4D-48F8-8E7F-DC8A6F145A4E}
+		{19227F7C-FA46-46F3-BE41-3B3D94348F08} = {D8AFEC53-6F4D-48F8-8E7F-DC8A6F145A4E}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {9451977A-D785-4E96-BF07-66D27FA51848}
+	EndGlobalSection
+EndGlobal
