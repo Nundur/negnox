@@ -7,7 +7,7 @@ Az egész C# alapon működik, itt ott batch file és vbs is előfordul benne. A
 
 A program automatikusan logolja a legtöbb leütött parancsot és a kliensektől visszakapott értékeket, de ezt a funkciót, és még sok mást, ki lehet kapcsolni a konfigban (`config.nc`)
 
-Csinálok release-t is, de jelenleg használhatatlan mert a kliens exékben a szerver ip címe hardcodeolva van, és nem lehet megváltoztatni (MÉG!)
+Még nem csinálok release-t jelenleg használhatatlan lenne mert a kliens exékben a szerver ip címe hardcodeolva van, és nem lehet megváltoztatni (MÉG!)
 Ezt majd később kijavítom azzal hogy a program képes lesz compileolni C# kódot és személyre szabott ip-kel ellátni a payloadot.
 
 # Jelenleg futtatható használható parancsok:
