@@ -7,6 +7,9 @@ Az egész C# alapon működik, itt ott batch file és vbs is előfordul benne. A
 
 A program automatikusan logolja a legtöbb leütött parancsot és a kliensektől visszakapott értékeket, de ezt a funkciót, és még sok mást, ki lehet kapcsolni a konfigban (`config.nc`)
 
+Csinálok release-t is, de jelenleg használhatatlan mert a kliens exékben a szerver ip címe hardcodeolva van, és nem lehet megváltoztatni (MÉG!)
+Ezt majd később kijavítom azzal hogy a program képes lesz compileolni C# kódot és személyre szabott ip-kel ellátni a payloadot.
+
 # Jelenleg futtatható használható parancsok:
 <img width="350"  alt="AAAAAAAdrgsfsrgrg" src="https://github.com/user-attachments/assets/9f2f40fd-1241-4c2b-a321-51af9936e788" />
 
@@ -18,6 +21,7 @@ A későbbiekben még várhatóak frissítések, készülőben vannak már ezek 
 - Negnox scripting language normális implementálása bugok nélkül
 - Sub-controller-ek létrehozása (más is tudja irányítani a fő szerverhez csatlakozott klienseket.
 - Python-ba való átírás. Ez később fog majd kelleni a sub-controller funkció behozatala után, mert ha minden jól megy, a python scriptel tudok telefonról is irányítani negnox klienseket.
+- Személyre szabott ip választás a kliens-eknél C# kód complileolással.
 
 # képek:
 <img width="300"  alt="negnoxlogomasik" src="https://github.com/user-attachments/assets/379a234a-3f9a-4d6e-9a5d-c7f3f73d922a" />
