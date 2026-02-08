@@ -1,4 +1,4 @@
-
+import negnox
 
 
 
@@ -28,3 +28,12 @@ def parancsDarabolas(asd):
 def parameterDarabolas(asd):
     returner = asd.split('"')
     return returner
+
+def CheckTargetEnabled():
+    #print(f"{negnox.Program.vanTarget}|{negnox.Program.targetIp}")
+    print("")
+    if not negnox.Program.targetIp == "":
+        return True
+    else :
+        print("Ez a parancs célpont specifikus!!!")
+        return False

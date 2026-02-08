@@ -17,16 +17,24 @@ class TCPHelper:
         while True:
             client, addr = serverSocket.accept()
             negnox.Program.kliensek.append(client)
+            print("")
             print(f"{addr[0]}:{addr[1]} joined the game")
-
+            if negnox.Program.isPromptLive == True:
+                print("negnox>", end='')
             threading.Thread(target=TCPHelper.monitorClient, args=(client,), daemon=True).start()
 
     @staticmethod
     def monitorClient(client):
+        ip = client.getpeername()[0]
         try:
+            
             while True:
-                data = client.recv(10000)
-                if not data:
+                try:
+
+                    data = client.recv(10000)
+                    if not data:
+                        break
+                except ConnectionResetError:
                     break
                 text = data.decode("utf-8", errors="ignore")
                 adat = text.split("|")
@@ -90,18 +98,38 @@ class TCPHelper:
                             negnox.writePrompt()
                     except Exception as e :
                         print(e)
-                #elif adat[0] == "ls":
-                #elif adat[0] == "pwd":
-                #elif adat[0] == "cd":
-                #elif adat[0] == "download":
-                #elif adat[0] == "audio":
+                elif adat[0] == "ls":
+                    cuccokAKonyvtarban = adat[1].split('\n')
+                    print("Show directory:")
+                    print("-" * 70)
+                    cuccokAKonyvtarban.pop()
+                    for i in range(len(cuccokAKonyvtarban)):
+                        mappa = False
+                        if cuccokAKonyvtarban[i].split('?')[1] == "mappa":
+                            mappa = True
+                        fajlnev = cuccokAKonyvtarban[i].split('?')[0]
+                        if mappa:
+                            print("[MAPPA] > ", end="")
+                        else:
+                            print("[FÁJL]  > ", end="")
+                        print(fajlnev)
+                    print("-" *70)
+                elif adat[0] == "pwd":
+                    print(adat[1])
+                elif adat[0] == "cd":
+                    print(adat[1])
+                elif adat[0] == "download":
+                    print("nem sikerült a letöltés:(")
+                elif adat[0] == "audio":
+                    print(adat[1])
                 
 
 
         finally:
             negnox.Program.kliensek.remove(client)
             client.close()
-            print("Client disconnected")
+            print(f"[{ip} disconnected]")
+            print("")
     
     
     #getfiles---------------------------------------------------------
@@ -145,3 +173,48 @@ class TCPHelper:
                     raise ConnectionError("Kapcsolat megszakadt")
                 data += chunk
             return data.decode("utf-8", errors="ignore").strip()
+    #send--------------------------------------------------------------------
+    @staticmethod
+    def Send(message:str):
+        time.sleep(0.1)
+        data = message.encode("utf-8")
+        if negnox.Program.vanTarget :
+            client = None
+
+            for c in negnox.Program.kliensek:
+                try:
+                    ip = c.getpeername()[0]
+                    if ip == negnox.Program.targetIp:
+                        client = c
+                        break
+                except :
+                    pass
+            if client :
+                try:
+                    client.sendall(data)
+                    print(f"[{message} elküldve erre: {negnox.Program.targetIp}]")
+                except :
+                    print(f"[hiba a küldés során {negnox.Program.targetIp}-nek]")
+            else :
+                
+                print(f"[Nincsen {negnox.Program.targetIp} nevű kliens csatlakozva]")
+        else :
+            for client in negnox.Program.kliensek[:]:
+                try:
+                    client.sendall(data)
+                    ip = client.getpeername()[0]
+                    print(f"[{message} elküldve {ip}-nek]")
+                except:
+                    ip = client.getpeername()[0]
+                    print(f"{ip} removed")
+                    negnox.Program.kliensek.remove(client)
+
+
+        #print(message)
+    #sendfiles
+    @staticmethod
+    def SendFile(filePath, targetFilePath):
+        if not os.path.isfile(filePath):
+            print("[A megadott fájl nem létezik!]")
+        
+        

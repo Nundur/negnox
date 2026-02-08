@@ -67,10 +67,11 @@ class Program:
 
 
         while True:
+            Program.isPromptLive = True
             x = input("negnox>")
             Program.isPromptLive = False
             Commandok.CheckCommand(x)
-            Program.isPromptLive = True
+            
 
 
 
