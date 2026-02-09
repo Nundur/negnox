@@ -1,9 +1,8 @@
 import socket
 import threading
 #from pathlib import Path
-import time
 import os
-import msvcrt
+import time
 
 
 import negnox
@@ -257,7 +256,7 @@ def CheckCommand(x):
             else :
                 TCPHelper.TCPHelper.Send(bemenet)
     elif command == "exit":
-        os._exit()
+        os._exit(0)
     elif command == "cls" or command == "clear":
         negnox.clear()
     elif command == "logo":
