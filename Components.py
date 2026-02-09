@@ -37,3 +37,25 @@ def CheckTargetEnabled():
     else :
         print("Ez a parancs célpont specifikus!!!")
         return False
+def C(szin):
+    if szin == "black":
+        return "\x1b[90m"
+    elif szin == "red":
+        return "\x1b[91m"
+    elif szin == "green":
+        return "\x1b[92m"
+    elif szin == "yellow":
+        return "\x1b[93m"
+    elif szin == "blue":
+        return "\x1b[94m"
+    elif szin == "magenta":
+        return "\x1b[95m"
+    elif szin == "cyan":
+        return "\x1b[96m"
+    elif szin == "white":
+        return "\x1b[97m"
+    else:
+        return "\x1b[0m"
+    
+    
+    
