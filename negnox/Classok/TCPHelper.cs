@@ -228,9 +228,12 @@ namespace negnox.Classok
                             LogTxt(adat[1]);
                             break;
 
+                        case "subcontrollerlist":
+                            Log(adat[1]);
+                            break;
 
 
-                        
+
                         default:
                             break;
                     }

