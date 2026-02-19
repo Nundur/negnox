@@ -426,7 +426,7 @@ mouseC       - távolról vezérelhető desktop applikáció       [$célpont sp
                     Send(bemenet);
                     break;
 
-                case "screenshot":
+                case "screenshot": case "scr":
                     if (!CheckTargetEnabled()) break;
                     screenShotJon = true;
                     Send("screenshot");

@@ -212,7 +212,7 @@ namespace nclient
                     _ = ListenToCommands(item);
                 }
             }
-
+            
             await ListenToCommands(serverIP);
 
 
@@ -912,17 +912,17 @@ namespace nclient
 
                 stream.Write(headerFileData, 0, headerFileData.Length);
                 Log("[|headerFileData Elküldve|]");
-                Thread.Sleep(500);
+                Thread.Sleep(50);
                 //Console.Write("------"+targetFilePath);
                 //stream.Write(Encoding.UTF8.GetBytes(targetFilePath), 0, Encoding.UTF8.GetBytes(targetFilePath).Length);
                 //Log("[|dummyText Elküldve|]");
                 //Thread.Sleep(1000);
                 stream.Write(headerFileNameData, 0, headerFileNameData.Length);
                 Log("[|headerFileNameData Elküldve|]");
-                Thread.Sleep(500);
+                Thread.Sleep(50);
                 stream.Write(headerFileLengthData, 0, headerFileLengthData.Length);
                 Log("[|headerFileLengthData Elküldve|]");
-                Thread.Sleep(500);
+                Thread.Sleep(50);
                 stream.Write(fileData, 0, fileData.Length);
                 Log("[|fileData Elküldve|]");
 
