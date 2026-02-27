@@ -1,4 +1,4 @@
-showlogo:2
+showlogo:1
 showpath:false
-version:1.5.13
+version:1.6.1
 log:true

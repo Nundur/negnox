@@ -259,7 +259,7 @@ namespace negnox.Classok
         }
         public static void Send(string message)
         {
-            Thread.Sleep(100);
+            Thread.Sleep(50);
             byte[] data = Encoding.UTF8.GetBytes(message);
             if (vanTarget)
             {

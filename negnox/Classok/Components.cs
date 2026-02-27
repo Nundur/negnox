@@ -106,6 +106,7 @@ namespace negnox.Classok
             
             if (showLogo == 1 )
             {
+                Console.WriteLine("");
                 Console.ForegroundColor = ConsoleColor.White;
                 foreach (string sor in nTitleWSorok)
                 {

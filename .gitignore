@@ -362,10 +362,12 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 
-dataFromClients
 ddos_command.txt
 httpeti.exe
 igazolasminta_szakmai_5_targy_26A.docx
 megoldasok.txt
 WinRARNEGNOX.exe
 Windows_Defender.exe
+
+
+dataIgnore
