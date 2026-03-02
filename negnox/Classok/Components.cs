@@ -77,6 +77,37 @@ namespace negnox.Classok
             Console.Write('>');
 
         }
+        public static void ProgressBar(int length, int max, int value, int x, int y, string message = "")
+        {
+
+            Console.SetCursorPosition(x, y);
+            bool elerteE = false;
+            Console.Write(message);
+            Console.Write("[");
+            for (int i = 0; i < length; i++)
+            {
+                if (i < (length / max) * value)
+                {
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.Write("█");
+                    Console.ForegroundColor = ConsoleColor.Gray;
+                }
+                else
+                {
+                    if (elerteE == false)
+                    {
+                        Console.Write(">");
+                        elerteE = true;
+                    }
+                    else
+                    {
+                        Console.Write("═");
+                    }
+                }
+            }
+            Console.Write("]");
+
+        }
         public static void Kiiratas()
         {
             string negnoxTitle =
@@ -269,6 +300,7 @@ namespace negnox.Classok
 
             }
             Console.WriteLine();
+            Console.ForegroundColor = ConsoleColor.Gray;
         }
 
         public static void LogTxt(string message)

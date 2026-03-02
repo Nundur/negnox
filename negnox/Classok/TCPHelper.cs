@@ -356,23 +356,39 @@ namespace negnox.Classok
             {
                 NetworkStream stream = client.GetStream();
 
+                int left = Console.CursorLeft;
+                int top = Console.CursorTop+1;
+
+                
+
                 stream.Write(headerFileData, 0, headerFileData.Length);
-                Log("[|headerFileData Elküldve|]");
+                Console.SetCursorPosition(left, top-1);
+                Log("[|headerFileData Elküldve|]                            ");
+                ProgressBar(30, 5, 1, left, top, $"Sending File To {client.Client.RemoteEndPoint} : ");
                 Thread.Sleep(500);
                 //Console.Write("------"+targetFilePath);
                 stream.Write(Encoding.UTF8.GetBytes(targetFilePath), 0, Encoding.UTF8.GetBytes(targetFilePath).Length);
-                Log("[|dummyText Elküldve|]");
+                Console.SetCursorPosition(left, top - 1);
+                Log("[|dummyText Elküldve|]                            ");
+                ProgressBar(30, 5, 2, left, top, $"Sending File To {client.Client.RemoteEndPoint} : ");
                 Thread.Sleep(500);
                 stream.Write(headerFileNameData, 0, headerFileNameData.Length);
-                Log("[|headerFileNameData Elküldve|]");
+                Console.SetCursorPosition(left, top - 1);
+                Log("[|headerFileNameData Elküldve|]                            ");
+                ProgressBar(30, 5, 3, left, top, $"Sending File To {client.Client.RemoteEndPoint} : ");
                 Thread.Sleep(500);
                 stream.Write(headerFileLengthData, 0, headerFileLengthData.Length);
-                Log("[|headerFileLengthData Elküldve|]");
+                Console.SetCursorPosition(left, top - 1);
+                Log("[|headerFileLengthData Elküldve|]                            ");
+                ProgressBar(30, 5, 4, left, top, $"Sending File To {client.Client.RemoteEndPoint} : ");
                 Thread.Sleep(500);
                 stream.Write(fileData, 0, fileData.Length);
-                Log("[|fileData Elküldve|]");
-
+                Console.SetCursorPosition(left, top - 1);
+                Log("[|fileData Elküldve|]                            ");
+                ProgressBar(30, 5, 5, left, top, $"Sending File To {client.Client.RemoteEndPoint} : ");
+                Console.WriteLine();
                 Log($"[Fájl elküldve: {fileName} -> {((IPEndPoint)client.Client.RemoteEndPoint).Address}]");
+                //ProgressBar(20, 6, 1, 2, 2, "Sending File To Client : ");
             }
             catch (Exception ex)
             {
@@ -386,11 +402,27 @@ namespace negnox.Classok
         {
             hova = ".\\dataFromClients";
             string fileName = ReadLine(stream);
+            
+            Console.Write("[ReadLine : ");
+            Console.ForegroundColor = ConsoleColor.Magenta;
+            Console.Write(fileName);
+            Console.ForegroundColor = ConsoleColor.Gray;
+            Console.Write("]");
+
+
             receivedFileName = fileName;
             string[] fileNameDarabolva = fileName.Split('\\');
             fileName = fileNameDarabolva.Last();
+
             //Console.WriteLine(ReadLine(stream));
             string asd = ReadLine(stream);
+            Console.Write("[ReadLine : ");
+            Console.ForegroundColor = ConsoleColor.Magenta;
+            Console.Write(asd);
+            Console.ForegroundColor = ConsoleColor.Gray;
+            Console.Write("]");
+
+
             //Console.ForegroundColor = ConsoleColor.Red;
             //Console.WriteLine(asd);
             //Console.ForegroundColor = ConsoleColor.Gray;
@@ -437,9 +469,9 @@ namespace negnox.Classok
                 bytes.Add((byte)b);
             }
             Console.WriteLine();
-            Console.ForegroundColor = ConsoleColor.Magenta;
-            Console.Write(Encoding.UTF8.GetString(bytes.ToArray()));
-            Console.ForegroundColor = ConsoleColor.Gray;
+            //Console.ForegroundColor = ConsoleColor.Magenta;
+            //Console.Write(Encoding.UTF8.GetString(bytes.ToArray()));
+            //Console.ForegroundColor = ConsoleColor.Gray;
             return Encoding.UTF8.GetString(bytes.ToArray());
         }
 

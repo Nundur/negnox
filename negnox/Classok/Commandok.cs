@@ -20,6 +20,8 @@ namespace negnox.Classok
     {
         public static void CheckCommand(string x)
         {
+            int left = Console.CursorLeft;
+            int top = Console.CursorTop;
             LogTxt(x);
             konzolmenu konzolmenu = new konzolmenu();
             string[] xSplittelve = x.Split(' ');
@@ -153,16 +155,35 @@ mouseC       - távolról vezérelhető desktop applikáció       [$célpont sp
                 case "starget":
                 case "settarget":
                 case "st":
+
+                    left = Console.CursorLeft;
+                    top = Console.CursorTop;
+
+
                     string[] ipk = kliensek.Select(i => i.Client.RemoteEndPoint.ToString()).ToArray();
-                    int valasztas = konzolmenu.MenuLista(ipk, 65, 20, 23, 12,
+
+                    int menuListaStargetHozzaad = 0;
+                    if (top >= 25)
+                    {
+                        menuListaStargetHozzaad = -20;
+                    } else
+                    {
+                        menuListaStargetHozzaad = 0;
+                    }
+
+                    int valasztas = konzolmenu.MenuLista(ipk, 84, top+menuListaStargetHozzaad, 23, 12,
                         ConsoleColor.Black, ConsoleColor.Gray, ConsoleColor.Gray, ConsoleColor.Green, konzolmenuFejlesztes.Orientation.vertical, true, true) - 1;
+
+                    konzolmenu.Ablak(84, top+menuListaStargetHozzaad, 24, 13, ConsoleColor.Black, false, 0);
+
 
                     targetIp = kliensek.Where(i => i.Client.RemoteEndPoint.ToString() == ipk[valasztas]).First().Client.RemoteEndPoint.ToString();
                     targetIp = targetIp.Split(':')[0];
                     vanTarget = true;
                     Console.ForegroundColor = ConsoleColor.Gray;
                     Console.BackgroundColor = ConsoleColor.Black;
-                    Console.Clear();
+                    //Console.Clear();
+                    Console.SetCursorPosition(left, top);
                     Log($"[|Célpont beállítva :| {targetIp}]");
                     Console.Title = $"Negnox Console target:{targetIp}";
                     break;

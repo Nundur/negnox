@@ -47,6 +47,10 @@ namespace negnox
         static async Task Main(string[] args)
         {
 
+
+            Console.OutputEncoding = Encoding.UTF8;
+            Console.InputEncoding = Encoding.UTF8;
+
             Console.SetWindowSize(120, 50);
             Console.SetBufferSize(120, 9999);
             konzolmenu konzolmenu = new konzolmenu();
@@ -94,6 +98,15 @@ namespace negnox
 
 
             //config a fajlbol
+            if (!Directory.Exists(".\\logs"))
+            {
+                Directory.CreateDirectory(".\\logs");
+            }
+            if (!File.Exists(".\\logs\\CL.txt"))
+            {
+                File.WriteAllText(".\\logs\\CL.txt", "");
+                Thread.Sleep(500);
+            }
             if (!File.Exists("config.nc"))
             {
                 File.WriteAllText("config.nc", "showlogo:1\nshowpath:true\nversion:1.2.10");
