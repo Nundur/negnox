@@ -18,8 +18,17 @@ namespace negnox.Classok
 {
     public static class Commandok
     {
+        public static bool forCiklus = false;
+        public static List<string> forCommands = new List<string>();
+        public static int forCiklusCount = 0;
         public static void CheckCommand(string x)
         {
+            if (x.StartsWith("#"))
+            {
+                return;
+            }
+
+
             int left = Console.CursorLeft;
             int top = Console.CursorTop;
             LogTxt(x);
@@ -27,6 +36,15 @@ namespace negnox.Classok
             string[] xSplittelve = x.Split(' ');
             string bemenet = parancsDarabolas(x);
             string[] bemenetek = parameterDarabolas(bemenet);
+
+            if (forCiklus) { 
+            
+                if (x != "end-for")
+                {
+                    forCommands.Add(x);
+                }
+            }
+            
             switch (xSplittelve[0])
             {
                 case "help":
@@ -496,22 +514,25 @@ mouseC       - távolról vezérelhető desktop applikáció       [$célpont sp
                     break;
                     //script dolgok
                 case "say":
-
-
-                    for (int i = 0; i < bemenet.Split('%').Length; i++)
+                    if (!bemenet.StartsWith("\"") || !bemenet.Contains("\""))
+                    {
+                        Log("$Nem helyes a szintaxis!$");
+                        break;
+                    }
+                    for (int i = 0; i < bemenetek[1].Split('%').Length; i++)
                     {
 
                         if (i%2==0)
                         {
-                            Console.Write(bemenet.Split('%')[i]);
-                            LogTxt(bemenet.Split('%')[i]);
+                            Console.Write(bemenetek[1].Split('%')[i]);
+                            LogTxt(bemenetek[1].Split('%')[i]);
                         }
                         else
                         {
-                            if (variables.ContainsKey(bemenet.Split('%')[i]))
+                            if (variables.ContainsKey(bemenetek[1].Split('%')[i]))
                             {
-                                Console.Write(variables[bemenet.Split('%')[i]]);
-                                LogTxt(variables[bemenet.Split('%')[i]]);
+                                Console.Write(variables[bemenetek[1].Split('%')[i]]);
+                                LogTxt(variables[bemenetek[1].Split('%')[i]]);
                                 break;
                             }
                             else
@@ -521,6 +542,10 @@ mouseC       - távolról vezérelhető desktop applikáció       [$célpont sp
                         }
                        
 
+                    }
+                    if (string.IsNullOrEmpty(bemenetek[2].Trim()))
+                    {
+                        Console.WriteLine();
                     }
 
                     //Console.WriteLine(bemenet);
@@ -542,6 +567,38 @@ mouseC       - távolról vezérelhető desktop applikáció       [$célpont sp
                         
                     } else variables.Add(parancsok[0], "");
                     break;
+                case "start-for":
+                    
+                    try
+                    {
+                        forCiklusCount = Convert.ToInt32(bemenet);
+                        forCiklus = true;
+                    }
+                    catch (Exception)
+                    {
+
+                        Log("[Nem sikerült a ciklus számláló deklarálása!$]");
+                    }
+                    
+                    break;
+
+                case "end-for":
+                    forCiklus = false;
+
+                    Console.WriteLine(forCiklusCount);
+
+                    for (int i = 0; i < forCiklusCount-1; i++)
+                    {
+                        foreach (string command in forCommands)
+                        {
+                            CheckCommand(command);
+                        }
+                    }
+                    
+                    break;
+
+
+
 
 
                 case "subcontroller":
@@ -615,6 +672,10 @@ mouseC       - távolról vezérelhető desktop applikáció       [$célpont sp
                     break;
                 case "exit":
                     Environment.Exit(0);
+                    break;
+                case "":
+                    break;
+                case " ":
                     break;
                 default:
 

@@ -1,0 +1,37 @@
+
+
+
+clear
+
+#teszt komment
+
+say "Ez egy egy új sorba írás"
+say "Ez ugyanabba a sorba -" 0
+say "írás:D"
+say ""
+say "kliensek:"
+say "-----------"
+lsc
+
+wait 1500
+say "képernyő törlése" 0
+wait 200
+say "." 0
+wait 200
+say "." 0
+wait 200
+say "." 0
+wait 200
+clear
+cmd
+
+say "kezdő for ciklus tesztelése:"
+wait 200
+start-for 5
+msgbox asd
+wait 200
+end-for
+
+
+
+#:DDDDDDDDDDDDDD
