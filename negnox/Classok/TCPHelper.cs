@@ -403,7 +403,7 @@ namespace negnox.Classok
             hova = ".\\dataFromClients";
             string fileName = ReadLine(stream);
             
-            Console.Write("[ReadLine : ");
+            Console.Write("[-] [ReadLine : ");
             Console.ForegroundColor = ConsoleColor.Magenta;
             Console.Write(fileName);
             Console.ForegroundColor = ConsoleColor.Gray;
@@ -418,9 +418,10 @@ namespace negnox.Classok
             string asd = ReadLine(stream);
             Console.Write("[-] [ReadLine : ");
             Console.ForegroundColor = ConsoleColor.Magenta;
-            Console.Write(asd);
+            Console.Write(asd.Trim());
             Console.ForegroundColor = ConsoleColor.Gray;
             Console.Write("]");
+            Console.WriteLine();
 
 
             //Console.ForegroundColor = ConsoleColor.Red;
