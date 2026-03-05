@@ -12,19 +12,19 @@
 say "képernyő felvevése kezdődik..."
 wait 1200
 
-say "target beállítása"
-target 192.168.10.101
-wait 1000
+#say "target beállítása"
+#target 192.168.10.101
+#wait 1000
 
 
 start-for 50
-target 192.168.10.101
+#target 192.168.10.101
 screenshot
-wait 200
+wait 500
 end-for
 
 
 
-wait 1200
+wait 2000
 
 cmdme taskkill /IM "Microsoft.Photos.exe" /F

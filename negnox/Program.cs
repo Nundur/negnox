@@ -88,6 +88,10 @@ namespace negnox
                 Console.ReadKey();
                 goto passujra;
             }
+            konzolmenu.KomplexAblak(50, 15, 21, 8, ConsoleColor.DarkGreen, ConsoleColor.White, true, ShadowType.faded, ConsoleColor.DarkGray, ConsoleColor.Black, "Helyes jelszó!", ' ', true, TitleType.inBorder);
+            konzolmenu.Ablak(53, 17, 14, 3, ConsoleColor.Green, true, 2);
+            konzolmenu.TextBlock("Üdvözöllek:D", 54, 18, ConsoleColor.Black, ConsoleColor.Green);
+            Thread.Sleep(500);
             Console.BackgroundColor = ConsoleColor.Black;
             Console.ForegroundColor = ConsoleColor.Gray;
             Console.Clear();

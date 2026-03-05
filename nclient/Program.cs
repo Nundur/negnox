@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -110,7 +110,7 @@ namespace nclient
 
         //uj update rendszer
         public static bool isBeingUpdated = false;
-        public static string serverIP = "192.168.9.105";
+public static string serverIP = "192.168.9.105";
 
         public static string localIP = string.Empty;
 
