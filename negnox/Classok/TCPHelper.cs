@@ -272,16 +272,16 @@ namespace negnox.Classok
                     try
                     {
                         client.GetStream().Write(data, 0, data.Length);
-                        if (logSendingPackets) Log($"[÷{message}÷ |elküldve erre :| ÷{targetIp}÷]");
+                        if (logSendingPackets) Log($"[|+|] [÷{message}÷ |elküldve erre :| ÷{targetIp}÷]");
                     }
                     catch
                     {
-                        if (logSendingPackets) Log($"[$Hiba a küldés során$÷ {targetIp}÷$-nek.$]");
+                        if (logSendingPackets) Log($"[$!$] [$Hiba a küldés során$÷ {targetIp}÷$-nek.$]");
                     }
                 }
                 else
                 {
-                    if (logSendingPackets) Log($"[$Nincs ilyen kliens:$÷ {targetIp}÷]");
+                    if (logSendingPackets) Log($"[$!$] [$Nincs ilyen kliens:$÷ {targetIp}÷]");
                 }
             }
             else
@@ -292,7 +292,7 @@ namespace negnox.Classok
                     {
                         client.GetStream().Write(data, 0, data.Length);
 
-                        if (logSendingPackets) Log($"[÷{message} ÷|elküldve ide :| ÷{((IPEndPoint)client.Client.RemoteEndPoint).Address.ToString()}÷|-nek|]");
+                        if (logSendingPackets) Log($"[|+|] [÷{message} ÷|elküldve ide :| ÷{((IPEndPoint)client.Client.RemoteEndPoint).Address.ToString()}÷|-nek|]");
                     }
                     catch
                     {
@@ -332,7 +332,7 @@ namespace negnox.Classok
 
                     if (client == null)
                     {
-                        Log($"[Nincs ilyen kliens: {targetIp}]");
+                        Log($"[$!$] [Nincs ilyen kliens: {targetIp}]");
                         return;
                     }
 
@@ -363,31 +363,31 @@ namespace negnox.Classok
 
                 stream.Write(headerFileData, 0, headerFileData.Length);
                 Console.SetCursorPosition(left, top-1);
-                Log("[|headerFileData Elküldve|]                            ");
+                Log("[|+|] [|headerFileData Elküldve|]                            ");
                 ProgressBar(30, 5, 1, left, top, $"Sending File To {client.Client.RemoteEndPoint} : ");
                 Thread.Sleep(500);
                 //Console.Write("------"+targetFilePath);
                 stream.Write(Encoding.UTF8.GetBytes(targetFilePath), 0, Encoding.UTF8.GetBytes(targetFilePath).Length);
                 Console.SetCursorPosition(left, top - 1);
-                Log("[|dummyText Elküldve|]                            ");
+                Log("[|+|] [|dummyText Elküldve|]                            ");
                 ProgressBar(30, 5, 2, left, top, $"Sending File To {client.Client.RemoteEndPoint} : ");
                 Thread.Sleep(500);
                 stream.Write(headerFileNameData, 0, headerFileNameData.Length);
                 Console.SetCursorPosition(left, top - 1);
-                Log("[|headerFileNameData Elküldve|]                            ");
+                Log("[|+|] [|headerFileNameData Elküldve|]                            ");
                 ProgressBar(30, 5, 3, left, top, $"Sending File To {client.Client.RemoteEndPoint} : ");
                 Thread.Sleep(500);
                 stream.Write(headerFileLengthData, 0, headerFileLengthData.Length);
                 Console.SetCursorPosition(left, top - 1);
-                Log("[|headerFileLengthData Elküldve|]                            ");
+                Log("[|+|] [|headerFileLengthData Elküldve|]                            ");
                 ProgressBar(30, 5, 4, left, top, $"Sending File To {client.Client.RemoteEndPoint} : ");
                 Thread.Sleep(500);
                 stream.Write(fileData, 0, fileData.Length);
                 Console.SetCursorPosition(left, top - 1);
-                Log("[|fileData Elküldve|]                            ");
+                Log("[|+|] [|fileData Elküldve|]                            ");
                 ProgressBar(30, 5, 5, left, top, $"Sending File To {client.Client.RemoteEndPoint} : ");
                 Console.WriteLine();
-                Log($"[Fájl elküldve: {fileName} -> {((IPEndPoint)client.Client.RemoteEndPoint).Address}]");
+                Log($"[|+|] [Fájl elküldve: {fileName} -> {((IPEndPoint)client.Client.RemoteEndPoint).Address}]");
                 //ProgressBar(20, 6, 1, 2, 2, "Sending File To Client : ");
             }
             catch (Exception ex)
@@ -416,7 +416,7 @@ namespace negnox.Classok
 
             //Console.WriteLine(ReadLine(stream));
             string asd = ReadLine(stream);
-            Console.Write("[ReadLine : ");
+            Console.Write("[-] [ReadLine : ");
             Console.ForegroundColor = ConsoleColor.Magenta;
             Console.Write(asd);
             Console.ForegroundColor = ConsoleColor.Gray;
@@ -453,7 +453,7 @@ namespace negnox.Classok
                     totalRead += read;
                 }
             }
-            Log($"[|megjött a file| mentve : ÷.\\dataFromClients\\{fileName}÷]");
+            Log($"[|+|] [|megjött a file| mentve : ÷.\\dataFromClients\\{fileName}÷]");
 
         }
         static string ReadLine(NetworkStream stream)
@@ -498,16 +498,16 @@ namespace negnox.Classok
                 try
                 {
                     client.GetStream().Write(data, 0, data.Length);
-                    Log($"[÷{message}÷ |elküldve erre :| ÷{targetIp}÷]");
+                    Log($"[|+|] [÷{message}÷ |elküldve erre :| ÷{targetIp}÷]");
                 }
                 catch
                 {
-                    Log($"[$Hiba a küldés során$÷ {targetIp}÷$-nek.$]");
+                    Log($"[$!$] [$Hiba a küldés során$÷ {targetIp}÷$-nek.$]");
                 }
             }
             else
             {
-                Log($"[$Nincs ilyen kliens:$÷ {targetIp}÷]");
+                Log($"[$!$] [$Nincs ilyen kliens:$÷ {targetIp}÷]");
             }
         }
     }

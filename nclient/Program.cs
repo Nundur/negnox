@@ -267,8 +267,21 @@ namespace nclient
                                     continue;
                                 case "msgbox":
                                     command = "";
+                                    /*
                                     File.WriteAllText(dataPath + "\\emesgebox.vbs", $"msgbox \"{text}\"");
                                     Process.Start(dataPath + "\\emesgebox.vbs");
+                                    Console.WriteLine("emesgebox elinditvaxd");*/
+                                    _= Task.Run(() =>
+                                    {
+                                        MessageBox.Show(
+        text,
+        "Negnox Message",
+        MessageBoxButtons.OK,
+        MessageBoxIcon.None,
+        MessageBoxDefaultButton.Button1,
+        MessageBoxOptions.DefaultDesktopOnly
+    );
+                                    });
                                     Console.WriteLine("emesgebox elinditvaxd");
                                     continue;
                                 case "mousex":

