@@ -110,7 +110,7 @@ namespace nclient
 
         //uj update rendszer
         public static bool isBeingUpdated = false;
-public static string serverIP = "192.168.9.105";
+public static string serverIP = "192.168.0.157";
 
         public static string localIP = string.Empty;
 

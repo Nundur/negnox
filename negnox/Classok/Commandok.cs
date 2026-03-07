@@ -699,12 +699,25 @@ mouseC       - távolról vezérelhető desktop applikáció       [$célpont sp
                     Directory.SetCurrentDirectory("..\\..\\..\\nclient");
 
 
-
-                    string ip = bemenet;
+                    string ip = "";
+                    if (string.IsNullOrEmpty(bemenet))
+                    {
+                        var host = Dns.GetHostName(); // a gép hostneve
+                        foreach (var ipTemp in Dns.GetHostEntry(host).AddressList)
+                        {
+                            if (ipTemp.AddressFamily == AddressFamily.InterNetwork)
+                            {
+                                ip = ipTemp.ToString();
+                                break;
+                            }
+                        }
+                    }
+                    ip = bemenet;
                     string path = "Program.cs";
 
                     string[] lines = File.ReadAllLines(path);
 
+                    
                     lines[112] = $"public static string serverIP = \"{ip}\";";   // 4. sor (index 0-tól indul)
 
                     File.WriteAllLines(path, lines);
@@ -747,6 +760,7 @@ mouseC       - távolról vezérelhető desktop applikáció       [$célpont sp
 
 
 
+                    Directory.SetCurrentDirectory(localExePath);
 
                     break;
 

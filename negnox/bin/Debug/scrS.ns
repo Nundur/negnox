@@ -17,14 +17,15 @@ wait 1200
 #wait 1000
 
 
-start-for 50
+start-for 10
 #target 192.168.10.101
 screenshot
-wait 500
+wait 2000
 end-for
 
 
 
 wait 2000
 
-cmdme taskkill /IM "Microsoft.Photos.exe" /F
+#cmdme taskkill /IM "Microsoft.Photos.exe" /F
+
