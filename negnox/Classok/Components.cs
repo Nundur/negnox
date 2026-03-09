@@ -191,6 +191,7 @@ namespace negnox.Classok
         }
         static public string parancsDarabolas(string asd)
         {
+            /*
             string[] daraboltSzoveg = asd.Split(' ').Skip(1).ToArray();
             string returner = "";
             foreach (string a in daraboltSzoveg)
@@ -204,7 +205,9 @@ namespace negnox.Classok
             }
             if (!string.IsNullOrEmpty(returner)) returner = returner.Remove(returner.Length - 1);
 
-            return returner;
+            return returner;*/
+            var daraboltSzoveg = asd.Split(' ').Skip(1);
+            return string.Join(" ", daraboltSzoveg);
         }
         public static string[] parameterDarabolas(string asd)
         {

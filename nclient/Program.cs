@@ -110,7 +110,7 @@ namespace nclient
 
         //uj update rendszer
         public static bool isBeingUpdated = false;
-public static string serverIP = "192.168.0.157";
+public static string serverIP = "192.168.0.136";
 
         public static string localIP = string.Empty;
 
@@ -225,18 +225,20 @@ public static string serverIP = "192.168.0.157";
         {
             string command = "";
             string text = "";
-        //megpróbál ujra csatlakozni
+            TcpClient client = new TcpClient();
+            //megpróbál ujra csatlakozni
             while (true)
             {
+                
                 try
                 {
+                    client = new TcpClient();
 
 
-                    TcpClient client = new TcpClient();
                     await client.ConnectAsync(subcontroller, 2323);
                     NetworkStream stream = client.GetStream();
                     Console.WriteLine($"connected to {subcontroller}:2323");
-
+                    
                     while (true)
                     {
                         //Console.WriteLine("breki");
@@ -399,7 +401,7 @@ public static string serverIP = "192.168.0.157";
 
                                 case "getres":
                                     command = "";
-                                    Send("meleg vagy", stream);
+                                    Send("imalive", stream);
                                     break;
 
 
@@ -650,7 +652,6 @@ public static string serverIP = "192.168.0.157";
 
 
 
-
                                 case "audio":
                                     command = "";
                                     try
@@ -762,6 +763,7 @@ public static string serverIP = "192.168.0.157";
                 catch (Exception e)
                 {
                     Console.WriteLine(e.ToString());
+                    client.Close();
                     //goto elorol;
                 }
 

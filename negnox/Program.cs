@@ -48,8 +48,8 @@ namespace negnox
         {
 
 
-            Console.OutputEncoding = Encoding.UTF8;
-            Console.InputEncoding = Encoding.UTF8;
+            //Console.OutputEncoding = Encoding.UTF8;
+            //Console.InputEncoding = Encoding.UTF8;
 
             Console.SetWindowSize(120, 50);
             Console.SetBufferSize(120, 9999);
@@ -136,10 +136,12 @@ namespace negnox
             //listener
             Task helo = listen();
 
+
+
             Thread.Sleep(1500);
             isPromptLive = true;
             //parancsok
-            string x = "";
+            string x;
             while (true)
             {
                 WritePrompt();

