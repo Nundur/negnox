@@ -6,27 +6,26 @@
 
 
 #képernyő streamelő script:
-cmdme cd scrS & start "" scrS.exe
+cmdme cd dataFromClients & del *.png & cd ..
+wait 500
+cmdme cd scrS & start "" scrS.exe & cd ..
 say "képernyő felvevése kezdődik..."
 wait 1200
+output false
 
-#say "target beállítása"
-#target 192.168.10.101
-#wait 1000
-
-
-start-for 100
-#target 192.168.10.101
-scr asd
+start-for 200
+scr donotopen
 wait 50
 end-for
 
+output true
 cd %exetpath%
 cd ..
 cd data
 cmd del *.png
 
 wait 2000
+say "lefutott a screenstream"
 
 #cmdme taskkill /IM "Microsoft.Photos.exe" /F
 

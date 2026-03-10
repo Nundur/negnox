@@ -259,51 +259,56 @@ namespace negnox.Classok
         /// ÷ cyan
         /// </summary>
         /// 
-        public static void Log(string message, ConsoleColor fg= ConsoleColor.Gray)// ennek a metodusnak az a lényege hogy ha | közé teszel valamit, zölden írja ki, ha $ közé teszel valamit, pirsos, ha pedig ÷ közé akkor cyan
+        public static void Log(string message, bool newLine = true, ConsoleColor fg= ConsoleColor.Gray)// ennek a metodusnak az a lényege hogy ha | közé teszel valamit, zölden írja ki, ha $ közé teszel valamit, pirsos, ha pedig ÷ közé akkor cyan
         {
-            LogTxt(message);
-            Console.ForegroundColor = fg;
-            int zoldSzamlalo = 0;
-            int pirosSzamlalo = 0;
-            int cyanSzamlalo = 0;
-            foreach (string item in message.Split('|'))
+            if (output)
             {
-                zoldSzamlalo++;
-                if (zoldSzamlalo % 2 == 0) { Console.ForegroundColor = ConsoleColor.Green; Console.Write(item); }
-                else
+                LogTxt(message);
+                Console.ForegroundColor = fg;
+                int zoldSzamlalo = 0;
+                int pirosSzamlalo = 0;
+                int cyanSzamlalo = 0;
+                foreach (string item in message.Split('|'))
                 {
-                    Console.ForegroundColor = fg;
-                    foreach (string item1 in item.Split('$'))
+                    zoldSzamlalo++;
+                    if (zoldSzamlalo % 2 == 0) { Console.ForegroundColor = ConsoleColor.Green; Console.Write(item); }
+                    else
                     {
-                        pirosSzamlalo++;
-                        if (pirosSzamlalo % 2 == 0)
+                        Console.ForegroundColor = fg;
+                        foreach (string item1 in item.Split('$'))
                         {
-                            Console.ForegroundColor = ConsoleColor.Red;
-                            Console.Write(item1);
-                        }
-                        else
-                        {
-                            Console.ForegroundColor = fg;
-                            foreach (string item2 in item1.Split('÷'))
+                            pirosSzamlalo++;
+                            if (pirosSzamlalo % 2 == 0)
                             {
-                                cyanSzamlalo++;
-                                if (cyanSzamlalo % 2 == 0)
-                                {
-                                    Console.ForegroundColor = ConsoleColor.Cyan;
-                                    //Console.Write(item2);
-                                }
-                                else Console.ForegroundColor = fg;
-                                Console.Write(item2);
+                                Console.ForegroundColor = ConsoleColor.Red;
+                                Console.Write(item1);
                             }
-                            cyanSzamlalo = 0;
+                            else
+                            {
+                                Console.ForegroundColor = fg;
+                                foreach (string item2 in item1.Split('÷'))
+                                {
+                                    cyanSzamlalo++;
+                                    if (cyanSzamlalo % 2 == 0)
+                                    {
+                                        Console.ForegroundColor = ConsoleColor.Cyan;
+                                        //Console.Write(item2);
+                                    }
+                                    else Console.ForegroundColor = fg;
+                                    Console.Write(item2);
+                                }
+                                cyanSzamlalo = 0;
+                            }
                         }
+                        pirosSzamlalo = 0;
                     }
-                    pirosSzamlalo = 0;
+
                 }
+                if (newLine) Console.WriteLine();
+                Console.ForegroundColor = ConsoleColor.Gray;
 
             }
-            Console.WriteLine();
-            Console.ForegroundColor = ConsoleColor.Gray;
+            
         }
 
         public static void LogTxt(string message)

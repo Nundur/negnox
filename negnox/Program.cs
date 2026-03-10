@@ -43,7 +43,7 @@ namespace negnox
 
         public static bool LogConsole = true;
 
-
+        public static bool output = true;
         static async Task Main(string[] args)
         {
 

