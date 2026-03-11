@@ -66,15 +66,15 @@ namespace negnox.Classok
         public static void WritePrompt()
         {
             Console.ForegroundColor = ConsoleColor.Gray;
-            Console.Write("negnox");
+            Log("negnox", false);
             if (showPromptPath)
             {
-                Console.Write('@');
+                Log("@", false);
                 Console.ForegroundColor = ConsoleColor.Blue;
-                Console.Write(Directory.GetCurrentDirectory());
+                Log(Directory.GetCurrentDirectory(), false);
                 Console.ForegroundColor = ConsoleColor.Gray;
             }
-            Console.Write('>');
+            Log(">", false);
 
         }
         public static void ProgressBar(int length, int max, int value, int x, int y, string message = "")

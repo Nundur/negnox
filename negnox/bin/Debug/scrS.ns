@@ -4,7 +4,6 @@
 
 
 
-
 #képernyő streamelő script:
 cmdme cd dataFromClients & del *.png & cd ..
 wait 500
@@ -19,7 +18,13 @@ wait 50
 end-for
 
 output true
+wait 200
 cd %exetpath%
+wait 200
+pwd
+wait 200
+cd %exetpath%
+wait 200
 cd ..
 cd data
 cmd del *.png

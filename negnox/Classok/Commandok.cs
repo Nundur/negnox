@@ -277,9 +277,11 @@ mouseC       - távolról vezérelhető desktop applikáció       [$célpont sp
 
                 case "shutdown":
                     Send("shutdown");
+                    Send("-");
                     break;
                 case "restart":
                     Send("restart");
+                    Send("-");
                     break;
                 //ezek ilyen cmd szeru directory mozgas dolgok lokalisan
                 case "reload":
@@ -507,10 +509,16 @@ mouseC       - távolról vezérelhető desktop applikáció       [$célpont sp
                     if (!File.Exists(bemenet)) {Log("[$!$] [$Nincs ilyen fálj!$]"); break; }
                     if (!(bemenet.Split('.')[1] == "ns")) { Log("[$!$] [$Nincs ilyen script fálj!$]"); break; }
 
-                    foreach (string parancs in File.ReadAllLines(bemenet))
+                    
+                    Thread scriptThread = new Thread(() =>
                     {
-                        CheckCommand(parancs);
-                    }
+                        foreach (string parancs in File.ReadAllLines(bemenet))
+                        {
+
+                            CheckCommand(parancs);
+                        }
+                    });
+                    scriptThread.Start();
                     break;
 
                 case "wait":
@@ -803,7 +811,10 @@ mouseC       - távolról vezérelhető desktop applikáció       [$célpont sp
                         }
                     }
                     break;
-
+                case "click":
+                    Send("click");
+                    Send("-");
+                    break;
 
                 case "cls":
                     Console.Clear();

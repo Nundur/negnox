@@ -244,6 +244,7 @@ namespace negnox.Classok
                             break;
 
                         case "imalive":
+                            Thread.Sleep(500);
                             if (isPromptLive) Console.WriteLine();
                             Log($"[-] [÷{client.Client.RemoteEndPoint}÷ is |alive|]");
                             if (isPromptLive) WritePrompt();
