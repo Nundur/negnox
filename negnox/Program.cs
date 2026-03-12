@@ -45,7 +45,7 @@ namespace negnox
 
         public static bool output = true;
 
-
+        public static readonly object sendLock = new object();
 
         public static string localIP = "";
         static async Task Main(string[] args)

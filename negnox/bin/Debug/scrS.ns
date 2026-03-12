@@ -7,7 +7,7 @@
 #képernyő streamelő script:
 cmdme cd dataFromClients & del *.png & cd ..
 wait 500
-cmdme cd scrS & start "" scrS.exe & cd ..
+cmdme tasklist /FI "IMAGENAME eq scrS.exe" | findstr /I "scrS.exe" >nul || cd scrS & start "" scrS.exe & cd ..
 say "képernyő felvevése kezdődik..."
 wait 1200
 output false
