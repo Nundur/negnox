@@ -21,6 +21,7 @@ namespace negnox.Classok
         public static bool forCiklus = false;
         public static List<string> forCommands = new List<string>();
         public static int forCiklusCount = 0;
+        public static bool futHttp = false;
         public static void CheckCommand(string x)
         {
             if (x.StartsWith("#"))
@@ -64,7 +65,7 @@ mousex       - elmozgatja az egeret x tengelyen
 mousey       - elmozgatja az egeret y tengelyen
 keystroke    - lenyomja az adott gombokat ("")        ÷(ks)÷
 kill         - bezár futó alkalmazásokat ("")
-processS     - elindít egy új Process-t ("")          ÷(sp)÷
+processS     - elindít egy új Process-t ("")          ÷(sp)÷ ÷(start)÷
 logoff       - kijelentkezteti a felhasználót
 shutdown     - lekapcsolja a gépet
 restart      - újraindítja a gépet
@@ -83,6 +84,8 @@ help         - kiírja ezt az üzenetet
 pwdme        - kijelzi hogy mi a jelenlegi lokális könyvtár
 copy         - átmásol fájlokat a CÉLPONT gépére ("" "")     
 reload       - újra indítja a listenert
+start-http   - indít egy http listenert ami fogad post kéréseket /command-ra
+stop-http    - bezárja a http listenert
 |//amik vissza is adnak valamit|
 cd           - könyvtár változtatás a célpont gépén          [$célpont specifikus!$]
 ls           - könyvtár kilistázása a célpont gépén          [$célpont specifikus!$]
@@ -263,6 +266,7 @@ mouseC       - távolról vezérelhető desktop applikáció       [$célpont sp
 
                 case "processS":
                 case "sp":
+                case "start":
                     if (!bemenet.StartsWith("\"") || !bemenet.Contains("\""))
                     {
                         Log("$Nem helyes a szintaxis!$");
@@ -810,6 +814,32 @@ mouseC       - távolról vezérelhető desktop applikáció       [$célpont sp
                                 break;
                         }
                     }
+                    break;
+
+
+
+                case "start-http":
+                    if (!futHttp)
+                    {
+                        httpListener = new HttpListener();
+                        httpListener.Prefixes.Add(url);
+                        httpListener.Start();
+                        //Log($"Fut a szerver itt {url}");
+
+                        Task listenTask = HandleIncomingHttpConnections();
+                        _ = listenTask;
+                        Log($"[+] [|Http szerver sikeresen lindítva! itt : |÷{url}÷]");
+                    } else
+                    {
+                        Log($"[!] [$Már fut a http szerver!$]");
+                    }
+                    
+                    break;
+
+
+                case "stop-http":
+                    httpListener.Stop();
+                    Log($"[|+|] [Http szerver $bezárva$]");
                     break;
                 case "click":
                     Send("click");

@@ -44,10 +44,21 @@ namespace negnox
         public static bool LogConsole = true;
 
         public static bool output = true;
+
+
+
+        public static string localIP = "";
         static async Task Main(string[] args)
         {
-
-
+            var host = Dns.GetHostName(); // a gép hostneve
+            foreach (var ip in Dns.GetHostEntry(host).AddressList)
+            {
+                if (ip.AddressFamily == AddressFamily.InterNetwork)
+                {
+                    localIP = ip.ToString();
+                    break;
+                }
+            }
             //Console.OutputEncoding = Encoding.UTF8;
             //Console.InputEncoding = Encoding.UTF8;
 
@@ -142,6 +153,8 @@ namespace negnox
             isPromptLive = true;
             //parancsok
             string x;
+
+            //Console.WriteLine(localIP);
             while (true)
             {
                 WritePrompt();

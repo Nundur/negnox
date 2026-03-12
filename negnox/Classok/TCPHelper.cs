@@ -487,6 +487,115 @@ namespace negnox.Classok
             return Encoding.UTF8.GetString(bytes.ToArray());
         }
 
+        public static HttpListener httpListener;
+        public static string url = $"http://localhost:3000/";
+
+        public static int pageViews = 0;
+        public static int requestCount = 0;
+        public static string returner =
+            "NegnoxReturner";
+
+        public static async Task HandleIncomingHttpConnections()
+        {
+            bool runServer = true;
+            // while a user haven't visitted the shutdown url, keep on handling request
+            while (runServer)
+            {
+                // will wait here until we hear from a connection
+                HttpListenerContext ctx = await httpListener.GetContextAsync();
+
+                // peel out the requests and response objects
+                HttpListenerRequest req = ctx.Request;
+                HttpListenerResponse resp = ctx.Response;
+
+                // print out some info about the request
+                //Console.WriteLine("Request #{0}", ++requestCount);
+                //Console.WriteLine(req.Url.ToString());
+                //Console.WriteLine(req.HttpMethod);
+                //Console.WriteLine(req.UserHostName);
+                //Console.WriteLine(req.UserAgent);
+                //Console.WriteLine(req.UserHostAddress);
+                //Console.WriteLine();
+
+                // if 'shutdown' url requested with POST, then shutdown the server after serving the page
+                if (req.HttpMethod == "POST")
+                {
+                    switch (req.Url.AbsolutePath)
+                    {
+                        case @"/command":
+                            using (var reader = new StreamReader(req.InputStream, req.ContentEncoding))
+                            {
+                                string body = reader.ReadToEnd();
+                                //Console.WriteLine("POST body: " + body);
+                                Thread checkCommands = new Thread(() =>
+                                {
+                                    foreach (string item in body.Split('\n'))
+                                    {
+                                        Commandok.CheckCommand(item);
+                                    }
+                                });
+                                checkCommands.Start();
+                            }
+                            returner = "Parancs végrehajtás folyamatban...";
+                            byte[] data = Encoding.UTF8.GetBytes(String.Format(returner));
+                            resp.ContentType = "text";
+                            resp.ContentEncoding = Encoding.UTF8;
+                            resp.ContentLength64 = data.LongLength;
+                            // write out to the response stream (async) and close
+                            await resp.OutputStream.WriteAsync(data, 0, data.Length);
+                            resp.Close();
+                            continue;
+                        //case @"/closehttp":
+                        //    returner = "Http szerver bezárása folymatban...";
+                        //    data = Encoding.UTF8.GetBytes(String.Format(returner));
+                        //    resp.ContentType = "text";
+                        //    resp.ContentEncoding = Encoding.UTF8;
+                        //    resp.ContentLength64 = data.LongLength;
+                        //    // write out to the response stream (async) and close
+                        //    await resp.OutputStream.WriteAsync(data, 0, data.Length);
+                        //    resp.Close();
+                        //    runServer = false;
+                        //    httpListener.Stop();
+                        //
+                        //    break;
+                        default:
+                            returner = "Post kérés megkapva..";
+                            data = Encoding.UTF8.GetBytes(String.Format(returner));
+                            resp.ContentType = "text";
+                            resp.ContentEncoding = Encoding.UTF8;
+                            resp.ContentLength64 = data.LongLength;
+                            // write out to the response stream (async) and close
+                            await resp.OutputStream.WriteAsync(data, 0, data.Length);
+                            resp.Close();
+                            break;
+                    }
+                    
+                } else
+                {
+                    returner = "Negnox Alive";
+                    byte[] data = Encoding.UTF8.GetBytes(String.Format(returner));
+                    resp.ContentType = "text";
+                    resp.ContentEncoding = Encoding.UTF8;
+                    resp.ContentLength64 = data.LongLength;
+                    // write out to the response stream (async) and close
+                    await resp.OutputStream.WriteAsync(data, 0, data.Length);
+                    resp.Close();
+                }
+                //string disableSubmit = !runServer ? "disable" : "";
+                //byte[] data = Encoding.UTF8.GetBytes(String.Format(returner, pageViews, disableSubmit));
+                //resp.ContentType = "text";
+                //resp.ContentEncoding = Encoding.UTF8;
+                //resp.ContentLength64 = data.LongLength;
+                //// write out to the response stream (async) and close
+                //await resp.OutputStream.WriteAsync(data, 0, data.Length);
+                //resp.Close();
+                //Thread.Sleep(TimeSpan.FromSeconds(15));
+            }
+        }
+
+
+
+
         public static void SendTo(string targetIp, string message)
         {
             byte[] data = Encoding.UTF8.GetBytes(message);
