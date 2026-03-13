@@ -7,7 +7,7 @@ Az egész C# alapon működik, itt ott batch file is előfordul benne. A kapcsol
 
 A program automatikusan logolja a legtöbb leütött parancsot és a kliensektől visszakapott értékeket, de ezt a funkciót, és még sok mást, ki lehet kapcsolni a konfigban (`config.nc`)
 
-Személyre szabott payloadot (megadni hogy belső hálózaton melyik ipre csatlakozzon vissza) a build [ip] parancsal lehet csinálni például (`build 192.168.9.102`). Ez után elkészül a várva várt vírus a payload mappába ami vissza csatlakozik a megadott ip-re.
+Személyre szabott payloadot (megadni hogy belső hálózaton melyik ipre csatlakozzon vissza) a build [ip] parancsal lehet csinálni például (`build 192.168.9.102`). Ez után elkészül a várva várt vírus a payload mappába ami vissza csatlakozik a megadott ip-re. (egyértelműen a build funkció sikeres működéséhez szükséges egy .NET keretrendszer az SDK-val együtt)
 
 # Jelenleg futtatható használható parancsok:
 <!--<img width="350"  alt="AAAAAAAdrgsfsrgrg" src="https://github.com/user-attachments/assets/9f2f40fd-1241-4c2b-a321-51af9936e788" /> -->
