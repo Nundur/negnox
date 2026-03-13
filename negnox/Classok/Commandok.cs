@@ -185,7 +185,7 @@ mouseC       - távolról vezérelhető desktop applikáció       [$célpont sp
                 case "delete":
                     if (!bemenet.StartsWith("\"") || !bemenet.Contains("\""))
                     {
-                        Log("$Nem helyes a szintaxis!$");
+                        Log("[$!$] [$Nem helyes a szintaxis!$]");
                         break;
                     }
                     lock (sendLock)

@@ -184,7 +184,8 @@ namespace negnox.Classok
                                 List<string> cuccokAKonyvtarban = new List<string>();
                                 adat[1].Split('\n').ToList().ForEach(a => cuccokAKonyvtarban.Add(a));
                                 Console.WriteLine("Show Directory:");
-                                for (int k = 0; k < 70; k++) Console.Write("-");
+                                //for (int k = 0; k < 70; k++) Console.Write("-");
+                                Log(" ");
                                 //cuccokAKonyvtarban.ForEach(a => Console.WriteLine(a));
                                 Console.WriteLine();
                                 cuccokAKonyvtarban.RemoveAt(cuccokAKonyvtarban.Count()-1);
@@ -195,19 +196,26 @@ namespace negnox.Classok
                                     {
                                         mappa = true;
                                     }
+
+
+
                                     string fajlnev = cuccokAKonyvtarban[i].Split('?')[0];
                                     //Log($"{fajlnev}");
-                                    Console.Write(fajlnev);
-                                    LogTxt(fajlnev);
-                                    for (int k = 0; k < 70 - fajlnev.Length; k++)
-                                    {
-                                        Console.Write(' ');
-                                    }
-                                    if (mappa) Log("÷[MAPPA]÷");
-                                    else Log("|[FÁJL]|");
+                                    //Console.Write(fajlnev);
+                                    //LogTxt(fajlnev);
+                                    if (mappa) Log("÷[MAPPA]÷ ", false);
+                                    else Log("|[FÁJL]|  ", false);
+
+                                    Log(fajlnev);
+                                    //for (int k = 0; k < 70 - fajlnev.Length; k++)
+                                   // {
+                                     //   Console.Write(' ');
+                                    //}
+                                    
                                 }
-                                for (int k = 0; k < 70; k++) Console.Write("-");
-                                Console.WriteLine();
+                                //for (int k = 0; k < 70; k++) Console.Write("-");
+                                //Console.WriteLine();
+                                Log(" ");
                             }
                             catch (Exception e)
                             {
